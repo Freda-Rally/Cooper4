@@ -1,0 +1,14 @@
+.settings/
+/.gradle/
+/.idea/
+/build/
+*.iml
+*.ipr
+*.iws
+logs/
+*.log
+*.port
+/tmp/
+**/.DS_Store
+.DS_Store
+out/

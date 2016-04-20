@@ -1,0 +1,63 @@
+name: "cooper4"
+server:
+  port: 8082
+#JDBC
+jdbc:
+  driverClass: com.mysql.jdbc.Driver
+  url: jdbc:mysql://110.249.213.170:3306/jxrrt
+  username: root
+  password: gyjxrrtdbserver
+  pool:
+    initialSize: 10
+    maxActive: 100
+    maxWait: 60000
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 25200000
+    removeAbandoned: true
+    removeAbandonedTimeout: 7200
+    logAbandoned: true
+    poolPreparedStatements: false
+
+#RABBIT_MQ
+rebbitmq:
+  queue:
+  exchange:
+  route:
+  rl:
+    username:
+    password:
+    host:
+    port:
+    virtualHost:
+  lc:
+    concurrency:
+    maxConcurrency:
+    prefetch:
+    method:
+#DRDID
+druid:
+  stat:
+    slowSqlMillis: 3000
+    logSlowSql: true
+    mergeSql: true
+  log:
+    resultSetLogEnabled: false
+    dataSourceLogEnabled: true
+#Redis
+redis:
+  pool:
+    maxIdle: 200
+    minIdle: 1
+    maxWait: 10000
+    testOnBorrow: true
+    testOnReturn: true
+  rl:
+    host: "localhost"
+    port: 6379
+    timeout: 10000
+    password: ""
+
+# MyBatis
+mybatis:
+    mapperLocations: "classpath:/org/freda/sqlmaps/**/*.xml"

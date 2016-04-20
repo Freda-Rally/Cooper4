@@ -1,0 +1,102 @@
+group 'org.freda'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext {
+        springBootVersion = '1.3.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven {
+            url 'http://maven.oschina.net/content/groups/public/'
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE')
+        classpath("org.springframework:springloaded:1.2.1.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'spring-boot'
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+
+    maven { url 'http://maven.oschina.net/content/groups/public/' }
+    flatDir {
+        dirs 'libs'
+    }
+}
+configurations {
+    providedRuntime
+    driver
+    compile.exclude group:'ch.qos.logback'
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
+dependencies {
+
+    //Spring Boot
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
+    compile 'org.springframework.boot:spring-boot-starter-jetty'
+    compile 'org.springframework.boot:spring-boot-starter-jdbc'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile 'org.mybatis.spring.boot:mybatis-spring-boot-starter:1.0.0'
+    compile 'org.springframework.boot:spring-boot-starter-log4j'
+
+    //Commons
+    compile 'commons-beanutils:commons-beanutils'
+    compile 'commons-fileupload:commons-fileupload:1.3.1'
+    
+    //Redis
+    compile 'redis.clients:jedis'
+    compile 'org.springframework.data:spring-data-redis'
+
+    //POI
+    compile 'org.apache.poi:poi:3.14'
+
+    //Quartz
+    compile 'org.quartz-scheduler:quartz:2.2.1'
+
+    //JSON
+    compile 'com.alibaba:fastjson:1.2.8'
+
+    //MySQL
+    compile 'mysql:mysql-connector-java:5.1.38'
+
+    //Axis
+    compile 'axis:axis:1.4'
+
+    //Druid
+    compile 'com.alibaba:druid:1.0.18'
+
+    //Mail
+    compile 'javax.mail:mail:1.5.0-b01'
+    compile 'javax.mail:javax.mail-api'
+
+    //Eheache
+    compile 'net.sf.ehcache:ehcache:2.10.1'
+
+    //MongoDB
+    compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+    //Others
+    compile 'javax.el:javax.el-api:3.0.1-b04'
+
+    testCompile 'junit:junit'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+task copyJars(type: Copy){
+    println configurations
+    from configurations.runtime
+    into 'jars'
+}
