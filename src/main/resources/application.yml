@@ -4,9 +4,9 @@ server:
 #JDBC
 jdbc:
   driverClass: com.mysql.jdbc.Driver
-  url: jdbc:mysql://110.249.213.170:3306/jxrrt
+  url:
   username: root
-  password: gyjxrrtdbserver
+  password:
   pool:
     initialSize: 10
     maxActive: 100
