@@ -72,12 +72,11 @@ public interface FredaMongoDao
     /**
      * 设置添加时的数据
      * @param model
-     * @param c
      * @return
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */
-    public DBObject setModel2DbObject(Object model,Class<?> c) throws IllegalArgumentException, IllegalAccessException;
+    public DBObject setModel2DbObject(Object model) throws IllegalArgumentException, IllegalAccessException;
 
     /**
      * 在不Dao不满足的情况下..请自行拿取MongoTemplate完成复杂操作.

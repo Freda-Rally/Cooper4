@@ -112,21 +112,20 @@ public abstract class BaseMongoDao implements FredaMongoDao
     /**
      * 将Model转化为 DBObject
      * @param model
-     * @param c
      * @return
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      */
     @Override
-    public DBObject setModel2DbObject(final Object model, Class<?> c) throws IllegalArgumentException, IllegalAccessException
+    public DBObject setModel2DbObject(final Object model) throws IllegalArgumentException, IllegalAccessException
     {
         DBObject obj = new BasicDBObject();
         //反转机制设置进DBObject
-        Field[] flds = c.getDeclaredFields();
+        Field[] fields = model.getClass().getDeclaredFields();
 
-        if(flds != null)
+        if(fields != null)
         {
-            for(Field field : flds)
+            for(Field field : fields)
             {
                 field.setAccessible(true);
 
