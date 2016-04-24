@@ -55,7 +55,8 @@ dependencies {
     //Commons
     compile 'commons-beanutils:commons-beanutils'
     compile 'commons-fileupload:commons-fileupload:1.3.1'
-    
+    compile 'org.apache.commons:commons-compress:1.11'
+
     //Redis
     compile 'redis.clients:jedis'
     compile 'org.springframework.data:spring-data-redis'
@@ -82,7 +83,7 @@ dependencies {
     compile 'javax.mail:mail:1.5.0-b01'
     compile 'javax.mail:javax.mail-api'
 
-    //Eheache
+    //Ehcache
     compile 'net.sf.ehcache:ehcache:2.10.1'
 
     //MongoDB
@@ -90,6 +91,8 @@ dependencies {
 
     //Others
     compile 'javax.el:javax.el-api:3.0.1-b04'
+    compile 'joda-time:joda-time:2.9.3'//Joda
+    compile fileTree(dir:'libs',include:'*.jar')
 
     testCompile 'junit:junit'
     testCompile 'org.springframework.boot:spring-boot-starter-test'

@@ -23,6 +23,11 @@ public class SystemContainer
     public static final String TIPS_ERROR_MSG = "很遗憾:操作失败!";
 
     /**
+     * 用户信息SessionKey
+     */
+    public static final String SYSTEM_USER_INFO_VO_KEY = "SYSTEM_USER_INFO_VO_KEY";
+
+    /**
      * 系统日期格式化参数
      */
     public static final String[] DATE_TIME_FORMART = {

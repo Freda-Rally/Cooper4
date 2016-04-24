@@ -64,13 +64,13 @@ public class DruidFilterConfiguration implements EnvironmentAware
     }
 
     @Bean(name = "druidFilters")
-    public List<Filter> druidFilters()
+    public List<Filter> druidFilters(StatFilter statFilter,Log4jFilter logFilter)
     {
         List<Filter> filters = new ArrayList<Filter>();
 
-        filters.add(logFilter());
+        filters.add(statFilter);
 
-        filters.add(statFilter());
+        filters.add(logFilter);
 
         return filters;
     }

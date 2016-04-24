@@ -9,8 +9,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import redis.clients.jedis.JedisPoolConfig;
 
-import javax.annotation.Resource;
-
 /**
  *
  * Jedis Connection Factory Config
@@ -25,13 +23,36 @@ public class RedisConnectionFactoryConfiguration implements EnvironmentAware
 
     private static final Log log = LogFactory.getLog(RedisConnectionFactoryConfiguration.class);
 
-    @Resource(name = "jedisPoolConfig")
-    private JedisPoolConfig jedisPoolConfig;
-
     @Override
     public void setEnvironment(Environment environment)
     {
         this.propertyResolver = new RelaxedPropertyResolver(environment,"redis.");
+    }
+
+    /**
+     *
+     * Jedis Pool
+     *
+     * @return jedisPoolConfig
+     */
+    @Bean
+    public JedisPoolConfig jedisPoolConfig()
+    {
+        log.debug("Jedis Pool Config Configure!");
+
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+
+        jedisPoolConfig.setMaxIdle(Integer.parseInt(propertyResolver.getProperty("pool.maxIdle")));
+
+        jedisPoolConfig.setMaxIdle(Integer.parseInt(propertyResolver.getProperty("pool.minIdle")));
+
+        jedisPoolConfig.setMaxWaitMillis(Long.parseLong(propertyResolver.getProperty("pool.maxWait")));
+
+        jedisPoolConfig.setTestOnBorrow(Boolean.parseBoolean(propertyResolver.getProperty("pool.testOnBorrow")));
+
+        jedisPoolConfig.setTestOnReturn(Boolean.parseBoolean(propertyResolver.getProperty("pool.testOnReturn")));
+
+        return jedisPoolConfig;
     }
 
     /**
@@ -41,7 +62,7 @@ public class RedisConnectionFactoryConfiguration implements EnvironmentAware
      * @return jedisConnectionFactory
      */
     @Bean(name = "jedisConnectionFactory")
-    public JedisConnectionFactory jedisConnectionFactory()
+    public JedisConnectionFactory jedisConnectionFactory(JedisPoolConfig jedisPoolConfig)
     {
         log.debug("Jedis Connection Factory Configure!");
 

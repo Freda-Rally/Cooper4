@@ -4,9 +4,9 @@ server:
 #JDBC
 jdbc:
   driverClass: com.mysql.jdbc.Driver
-  url:
+  url: jdbc:mysql://110.249.213.170:3306/jxrrt
   username: root
-  password:
+  password: gyjxrrtdbserver
   pool:
     initialSize: 10
     maxActive: 100
@@ -60,4 +60,12 @@ redis:
 
 # MyBatis
 mybatis:
-    mapperLocations: "classpath:/org/freda/sqlmaps/**/*.xml"
+  mapperLocations: "classpath:/org/freda/sqlmaps/**/*.xml"
+
+# Mongo
+mongo:
+  host: 127.0.0.1
+  port: 27017
+  username:
+  password:
+  database: xx

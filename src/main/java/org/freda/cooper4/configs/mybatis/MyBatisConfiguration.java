@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.freda.cooper4.configs.datasource.DataSourceConfiguration;
+import org.freda.cooper4.framework.datastructure.impl.BaseDto;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -62,7 +63,7 @@ public class MyBatisConfiguration implements EnvironmentAware,TransactionManagem
 
             sqlSessionFactoryBean.setDataSource(basicDataSource);
 
-            //sqlSessionFactoryBean.setTypeAliases(new Class[]{Object.class});//放入DtoClass
+            sqlSessionFactoryBean.setTypeAliases(new Class[]{BaseDto.class});//放入DtoClass
 
             sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(propertyResolver.getProperty("mapperLocations")));
 
@@ -94,6 +95,10 @@ public class MyBatisConfiguration implements EnvironmentAware,TransactionManagem
     /**
      *
      * 注释事务
+     *
+     * 此事务为JDBC事务..如果为分布式..请更换为JTA的事务..
+     *
+     * 具体修改..请参照 spring与jta集成的方法..进行注释事务的方法..
      *
      * @return
      */
