@@ -18,7 +18,8 @@ import java.util.List;
  * @author Administrator
  *
  */
-public class JsonHelper {
+public class JsonHelper
+{
 	private static Log	log	= LogFactory.getLog(JsonHelper.class);
 	
 	private static SerializeConfig mapping = new SerializeConfig(); 
@@ -46,7 +47,7 @@ public class JsonHelper {
 		} else {
 			jsonString = JSON.toJSONString(pObject,true);			
 		}
-		log.info("序列化后的JSON资料输出:\n" + jsonString);
+		log.debug("序列化后的JSON资料输出:\n" + jsonString);
 
 		return jsonString;
 	}
@@ -74,7 +75,7 @@ public class JsonHelper {
 			mapping.put(java.sql.Date.class, new SimpleDateFormatSerializer(pFormatString));
 			jsonString=JSON.toJSONString(pObject, mapping);
 		}
-		log.info("序列化后的JSON资料输出:\n" + jsonString);
+		log.debug("序列化后的JSON资料输出:\n" + jsonString);
 		return jsonString;
 	}
 
@@ -90,7 +91,7 @@ public class JsonHelper {
 	{
 		jsonString = "{\"TOTALCOUNT\":" + totalCount + ", \"ROOT\":" + jsonString + "}";
 
-		log.info("合并后的JSON资料输出:\n" + jsonString);
+		log.debug("合并后的JSON资料输出:\n" + jsonString);
 
 		return jsonString;
 	}
@@ -112,7 +113,7 @@ public class JsonHelper {
 
 		String jsonString = "{\"TOTALCOUNT\":" + totalCount + ", \"ROOT\":" + subJsonString + "}";
 
-		log.info("生成的JSON资料输出:\n" + jsonString);
+		log.debug("生成的JSON资料输出:\n" + jsonString);
 		return jsonString;
 	}
 
@@ -164,7 +165,7 @@ public class JsonHelper {
 			sunJsonString = encodeObject2Json(pDto, pFormatString);
 		}
 		jsonString = "{\"success\":" + (FredaUtils.isEmpty(pDto.getAsString("success")) ? "true" : pDto.getAsString("success")) + ",\"data\":" + sunJsonString + "}";
-		log.info("序列化后的JSON资料输出:\n" + jsonString);
+		log.debug("序列化后的JSON资料输出:\n" + jsonString);
 		return jsonString;
 	}
 

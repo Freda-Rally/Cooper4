@@ -3,10 +3,12 @@ package org.freda.cooper4.configs.mybatis;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.freda.cooper4.common.support.web.MapperInterface;
 import org.freda.cooper4.configs.datasource.DataSourceConfiguration;
 import org.freda.cooper4.framework.datastructure.impl.BaseDto;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
@@ -31,6 +33,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @AutoConfigureAfter({DataSourceConfiguration.class})
+@MapperScan(basePackageClasses = {MapperInterface.class})
 public class MyBatisConfiguration implements EnvironmentAware,TransactionManagementConfigurer
 {
 
@@ -53,6 +56,7 @@ public class MyBatisConfiguration implements EnvironmentAware,TransactionManagem
      * @return
      */
     @Bean(name = "sqlSessionFactory")
+
     public SqlSessionFactory sqlSessionFactoryBean()
     {
         try
@@ -63,7 +67,9 @@ public class MyBatisConfiguration implements EnvironmentAware,TransactionManagem
 
             sqlSessionFactoryBean.setDataSource(basicDataSource);
 
-            sqlSessionFactoryBean.setTypeAliases(new Class[]{BaseDto.class});//放入DtoClass
+            //sqlSessionFactoryBean.setConfigLocation(new DefaultResourceLoader().getResource(propertyResolver.getProperty("mapperConfig")));
+
+            sqlSessionFactoryBean.setTypeAliases(new Class[]{BaseDto.class});
 
             sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(propertyResolver.getProperty("mapperLocations")));
 

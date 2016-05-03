@@ -1,5 +1,6 @@
 package org.freda.cooper4.framework.datastructure.impl;
 
+import org.apache.ibatis.type.Alias;
 import org.freda.cooper4.framework.datastructure.Dto;
 import org.freda.cooper4.framework.json.JsonHelper;
 import org.freda.cooper4.framework.utils.TypeCaseHelper;
@@ -18,6 +19,7 @@ import java.util.List;
  *
  */
 @SuppressWarnings({ "rawtypes", "serial" })
+@Alias("dto")
 public class BaseDto extends HashMap implements Dto, Serializable
 {
 

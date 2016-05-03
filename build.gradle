@@ -14,13 +14,18 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath('io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE')
-        classpath("org.springframework:springloaded:1.2.1.RELEASE")
     }
 }
 
 apply plugin: 'java'
-apply plugin: 'war'
+apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'io.spring.dependency-management'
+
+jar {
+    baseName = 'Cooper4'
+    version = '1.0.1'
+}
 
 sourceCompatibility = 1.7
 
@@ -36,7 +41,8 @@ configurations {
     providedRuntime
     driver
     compile.exclude group:'ch.qos.logback'
-    compile.exclude module: "spring-boot-starter-tomcat"
+    compile.exclude module:'log4j-over-slf4j'
+    compile.exclude module: 'spring-boot-starter-tomcat'
 }
 
 dependencies {
@@ -56,6 +62,7 @@ dependencies {
     compile 'commons-beanutils:commons-beanutils'
     compile 'commons-fileupload:commons-fileupload:1.3.1'
     compile 'org.apache.commons:commons-compress:1.11'
+    compile 'commons-codec:commons-codec:1.10'
 
     //Redis
     compile 'redis.clients:jedis'

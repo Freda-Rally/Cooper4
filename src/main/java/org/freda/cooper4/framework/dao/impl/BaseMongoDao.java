@@ -1,17 +1,16 @@
 package org.freda.cooper4.framework.dao.impl;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 import org.freda.cooper4.framework.dao.FredaMongoDao;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**
  *
- * Mongo Dao
+ * Mongo Dao 本类只提供基本的增删改查..类似数据库的操作.
  *
  * Created by rally on 16/4/22.
  */
@@ -22,50 +21,49 @@ public abstract class BaseMongoDao implements FredaMongoDao
     /**
      * DELETE
      * @param collectionName
-     * @param doc
+     * @param query
      * @return
      */
     @Override
-    public int delete(String collectionName, DBObject doc)
+    public int delete(String collectionName,Query query)
     {
-        return mongoTemplate.getCollection(collectionName).remove(doc).getN();
+        return mongoTemplate.remove(query,collectionName).getN();
     }
 
     /**
      * ADD
      * @param collectionName
-     * @param doc
-     * @return
+     * @param t
      */
     @Override
-    public int insert(String collectionName, DBObject doc)
+    public<T> void insert(String collectionName, T t)
     {
-        return mongoTemplate.getCollection(collectionName).save(doc).getN();
+        mongoTemplate.insert(t,collectionName);
     }
 
     /**
      * ADD FOR LIST
+     * @param tList
      * @param coolectionName
-     * @param docs
      * @return
      */
     @Override
-    public int insertForList(String coolectionName, List<DBObject> docs)
+    public<T> void insertForList(String coolectionName, List<T> tList)
     {
-        return mongoTemplate.getCollection(coolectionName).insert(docs).getN();
+        mongoTemplate.insert(tList,coolectionName);
     }
 
     /**
-     * EDIT
+     * 批量EDIT
      * @param collectionName
-     * @param q where条件
-     * @param o set条件
+     * @param query where条件
+     * @param update set条件
      * @return
      */
     @Override
-    public int update(String collectionName, DBObject q, DBObject o)
+    public int update(String collectionName, Update update, Query query)
     {
-        return mongoTemplate.getCollection(collectionName).update(q, o, false, false).getN();
+        return mongoTemplate.updateMulti(query,update,collectionName).getN();
     }
 
     /**
@@ -82,61 +80,28 @@ public abstract class BaseMongoDao implements FredaMongoDao
     /**
      * 新建集合
      * @param collectionName
-     * @param indexCol
      * @return
      */
     @Override
-    public synchronized DBCollection createCollection(String collectionName,String indexCol)
+    public synchronized DBCollection createCollection(String collectionName)
     {
         if(!mongoTemplate.collectionExists(collectionName))
         {
-            mongoTemplate.createCollection(collectionName);
+            return mongoTemplate.createCollection(collectionName);
         }
-        this.getCollection(collectionName).createIndex(indexCol);
-
-        return this.getCollection(collectionName);
+        return mongoTemplate.getCollection(collectionName);
     }
 
     /**
      * 查询是否存在
      * @param collectionName
-     * @param q
+     * @param query
      * @return
      */
     @Override
-    public boolean isExit4Find(String collectionName, DBObject q)
+    public boolean isExit4Find(String collectionName, Query query)
     {
-        return mongoTemplate.getCollection(collectionName).count(q) > 0 ? true : false;
-    }
-
-    /**
-     * 将Model转化为 DBObject
-     * @param model
-     * @return
-     * @throws IllegalArgumentException
-     * @throws IllegalAccessException
-     */
-    @Override
-    public DBObject setModel2DbObject(final Object model) throws IllegalArgumentException, IllegalAccessException
-    {
-        DBObject obj = new BasicDBObject();
-        //反转机制设置进DBObject
-        Field[] fields = model.getClass().getDeclaredFields();
-
-        if(fields != null)
-        {
-            for(Field field : fields)
-            {
-                field.setAccessible(true);
-
-                obj.put(field.getName(), field.get(model));
-            }
-        }
-        else
-        {
-            return null;
-        }
-        return obj;
+        return mongoTemplate.count(query,collectionName) > 0 ? true : false;
     }
 
     /**
@@ -149,12 +114,26 @@ public abstract class BaseMongoDao implements FredaMongoDao
     }
 
     /**
-     * get
+     * get Template 用于在基本的无法满足的时候使用.
      * @return MongoTemplate
      */
     @Override
     public MongoTemplate getMongoTemplate()
     {
         return this.mongoTemplate;
+    }
+
+    /**
+     *
+     * 通用查询.
+     *
+     * @param collectionName
+     * @param query
+     * @param tClass
+     * @return list
+     */
+    public<T> List<T> query(String collectionName,Query query,Class<T> tClass)
+    {
+        return mongoTemplate.find(query,tClass,collectionName);
     }
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Common.DBIDSequence">
+
+    <resultMap id="sequenceResult" type="org.freda.cooper4.common.model.DBSequenceModel">
+        <result property="sequenceId" column="_SEQUENCEID" />
+        <result property="fieldName" column="_FIELDNAME" />
+        <result property="sequence" column="_SEQUENCE" />
+        <result property="pattern" column="_PATTERN" />
+        <result property="type" column="_TYPE" />
+        <result property="remark" column="_REMARK" />
+    </resultMap>
+
+    <parameterMap id="sequenceParam" type="org.freda.cooper4.common.model.DBSequenceModel">
+        <parameter property="sequence" resultMap="_SEQUENCE"/>
+        <parameter property="fieldName" resultMap="_FIELDNAME" />
+    </parameterMap>
+
+    <!-- 查询所有Sequence放入EHCACHE中.. -->
+    <select id="loadAllSequence" resultMap="sequenceResult">
+        SELECT
+            _COOPER4_SEQUENCE._SEQUENCEID,
+            _COOPER4_SEQUENCE._FIELDNAME,
+            _COOPER4_SEQUENCE._SEQUENCE,
+            _COOPER4_SEQUENCE._PATTERN,
+            _COOPER4_SEQUENCE._TYPE,
+            _COOPER4_SEQUENCE._REMARK
+        FROM _COOPER4_SEQUENCE
+    </select>
+
+    <!-- 获得后更新DB -->
+    <update id="editSequence" parameterMap="sequenceParam">
+        UPDATE _COOPER4_SEQUENCE SET
+            _COOPER4_SEQUENCE._SEQUENCE = #{sequence}
+        WHERE
+            _COOPER4_SEQUENCE._FIELDNAME = #{fieldName}
+    </update>
+</mapper>

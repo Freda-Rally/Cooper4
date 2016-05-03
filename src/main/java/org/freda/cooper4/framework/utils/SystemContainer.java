@@ -33,4 +33,9 @@ public class SystemContainer
     public static final String[] DATE_TIME_FORMART = {
             "yyyy-MM-dd HH:mm:ss","yyyy-MM-dd HH:mm","yyyy-MM-dd",
             "yyyyMMdd","yyyyMM"};
+
+    /**
+     * 系统页面数组..
+     */
+    public static final String[] SYSTEM_PAGES_TEMPLATE = new String[]{"Index","Main","Tab","MyBranch"};
 }

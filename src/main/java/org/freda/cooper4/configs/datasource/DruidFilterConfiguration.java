@@ -40,9 +40,15 @@ public class DruidFilterConfiguration implements EnvironmentAware
 
         Log4jFilter logFilter = new Log4jFilter();
 
-        logFilter.setResultSetLogEnabled(Boolean.parseBoolean(propertyResolver.getRequiredProperty("log.resultSetLogEnabled")));
+        logFilter.setResultSetLogEnabled(false);
 
-        logFilter.setDataSourceLogEnabled(Boolean.parseBoolean(propertyResolver.getRequiredProperty("log.dataSourceLogEnabled")));
+        logFilter.setStatementExecuteAfterLogEnabled(false);
+
+        logFilter.setStatementExecuteBatchAfterLogEnabled(false);
+
+        logFilter.setStatementExecuteQueryAfterLogEnabled(false);
+
+        logFilter.setStatementExecuteUpdateAfterLogEnabled(false);
 
         return  logFilter;
     }

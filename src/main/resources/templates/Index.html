@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Cooper4 Index Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link th:href="@{/framework/cooper4/css/ext_icon.css}" rel="stylesheet"/>
+        <link th:href="@{/framework/extjs/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css}" rel="stylesheet" />
+        
+        <script type="text/javascript" th:src="@{/framework/extjs/ext-all.js}"></script>
+        <script type="text/javascript" th:src="@{/framework/extjs/packages/ext-locale/build/ext-locale-zh_CN.js}"></script>
+        <script type="text/javascript" th:src="@{/framework/cooper4/js/Cooper4.js}"></script>
+        <script type="text/javascript" th:src="@{/framework/cooper4/js/Commons.js}"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            if (top.location != self.location) {
+                top.location = self.location;
+            }
+            //请求Index页面登录窗口..
+            Ext.require([
+                'Cooper4.plugins.core.index.Index'
+            ]);
+            //创建Index页面登录窗口..
+            Ext.onReady(function(){
+                Ext.create('Cooper4.plugins.core.index.Index',{});
+            });
+        </script>
+        <div id="hello-win" class="x-hidden">
+            <div id="hello-tabs">
+                <img border="0" width="450" height="60"
+                     src="/framework/cooper4/img/banner_right.png" alt="Cooper4" />
+            </div>
+        </div>
+        <div id="news-tab" class="x-hidden">
+            温馨提示..
+        </div>
+        <div id="tips-tab" class="x-hidden">
+            警告..
+        </div>
+    </body>
+</html>

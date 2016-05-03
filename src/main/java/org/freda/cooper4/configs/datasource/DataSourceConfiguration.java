@@ -4,7 +4,6 @@ import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +25,6 @@ import java.util.List;
  */
 @Configuration
 @EnableTransactionManagement
-@AutoConfigureAfter({DruidFilterConfiguration.class})
 public class DataSourceConfiguration implements EnvironmentAware
 {
     private RelaxedPropertyResolver propertyResolver;

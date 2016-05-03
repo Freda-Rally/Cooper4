@@ -1,13 +1,11 @@
 package org.freda.cooper4.framework.web.support;
 
-import org.freda.cooper4.framework.dao.FredaReader;
 import org.freda.cooper4.framework.datastructure.ParamsDto;
 import org.freda.cooper4.framework.datastructure.impl.BaseDto;
 import org.freda.cooper4.framework.datastructure.impl.BaseParamsDto;
 import org.freda.cooper4.framework.utils.SpringBeanLoader;
 import org.freda.cooper4.framework.utils.SystemContainer;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,9 +19,6 @@ import java.io.IOException;
  */
 public abstract class BaseController
 {
-    @Resource(name = "cooper4Reader")
-    protected FredaReader cooper4Reader;
-
     /**
      *
      * 如果不使用依赖注入..可动态获取Service实例.

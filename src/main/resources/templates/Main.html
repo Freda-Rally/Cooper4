@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Cooper4 Main Page.</title>
+    <link th:href="@{/framework/cooper4/css/ext_icon.css}" rel="stylesheet"/>
+    <link th:href="@{/framework/extjs/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css}" rel="stylesheet" />
+
+    <script type="text/javascript" th:src="@{/framework/extjs/ext-all.js}"></script>
+    <script type="text/javascript" th:src="@{/framework/extjs/packages/ext-locale/build/ext-locale-zh_CN.js}"></script>
+    <script type="text/javascript" th:src="@{/framework/cooper4/js/Cooper4.js}"></script>
+    <script type="text/javascript" th:src="@{/framework/cooper4/js/Commons.js}"></script>
+</head>
+<body>
+    <div id="top">
+        <img border="0" width="100%" height="68" src="/framework/cooper4/img/main_top.jpg"/>
+        <div style="position: absolute; left : 5%; bottom: 20%; font-size: 30px; color: white;">COOPER4</div>
+        <div style="position: absolute; right : 15px; bottom: 50%;" id="timeDiv"></div>
+        <div style="position: absolute; right : 15px; bottom: 10%;">
+            当前用户:<a href="javascript:void(0)" th:text="${session.SYSTEM_USER_INFO_VO_KEY.userName}"></a>.&nbsp;&nbsp;&nbsp;
+            <a href="javascript:void(0)" onclick="">修改密码</a>&nbsp;&nbsp;||&nbsp;
+            <a href="javascript:void(0)" onclick="">退出</a></div>
+    </div>
+    <div id="south" align="right">
+        Cooper4 pro by Freda -- Rally
+    </div>
+    <script type="text/javascript">
+        //请求Main页面JS..
+        Ext.require([
+            'Cooper4.plugins.core.main.Index'
+        ]);
+        //创建Main页面JS..
+        Ext.onReady(function(){
+            Ext.create('Cooper4.plugins.core.main.Index',{});
+        });
+    </script>
+</body>
+</html>

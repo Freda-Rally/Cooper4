@@ -6,7 +6,7 @@
     <defaultCache eternal="false" maxElementsInMemory="1000" overflowToDisk="false" diskPersistent="false"
                   timeToIdleSeconds="0" timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU" />
 
-    <cache name="demo" eternal="false" maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
+    <cache name="DBIDSequence" eternal="false" maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
            timeToIdleSeconds="0" timeToLiveSeconds="300" memoryStoreEvictionPolicy="LRU" />
 
 </ehcache>
