@@ -15,7 +15,7 @@ Ext.define('Cooper4.ux.IFrameComponent' ,{
     childEls : ['iframeEl'],
     initComponent : function(){
         this.callParent();
-        Ext.getBody().mask(this.loadMask);
+        //Ext.getBody().mask(this.loadMask);
     },
     initEvents : function(){
         this.callParent();

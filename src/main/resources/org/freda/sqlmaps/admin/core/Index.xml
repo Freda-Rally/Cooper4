@@ -39,6 +39,9 @@
         FROM _COOPER4_MENU
         <if test="userType != 1">
             INNER JOIN _COOPER4_ROLE_MENU ON _COOPER4_ROLE_MENU._MENUID = _COOPER4_MENU._MENUID
+            <if test="isQuick == 1">
+              AND _COOPER4_ROLE_MENU._ISQUICK = 1
+            </if>
             INNER JOIN _COOPER4_ROLE ON _COOPER4_ROLE._STATUS = 1 AND _COOPER4_ROLE._ROLEID = _COOPER4_ROLE_MENU._ROLEID
             INNER JOIN _COOPER4_USER_ROLE ON _COOPER4_USER_ROLE._ROLEID = _COOPER4_ROLE._ROLEID AND _COOPER4_USER_ROLE._USERID = #{userId}
         </if>
@@ -46,6 +49,9 @@
             _COOPER4_MENU._STATUS = 1
             <if test="userType == 3">
                 AND _COOPER4_MENU._MENUTYPE = 2
+            </if>
+            <if test="userType == 1 and isQuick == 1">
+                AND _COOPER4_MENU._MENUTYPE = 1
             </if>
             AND _COOPER4_MENU._PARENTID = #{pId}
         ORDER BY _COOPER4_MENU._SORTNO,_COOPER4_MENU._MENUID ASC

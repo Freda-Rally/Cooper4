@@ -18,7 +18,7 @@ Ext.define('Cooper4.plugins.core.index.LoginWin',{
 
             renderTo : Ext.getBody(),
             layout : 'border',
-            width : 400,
+            width : 350,
             height : 220,
             closeAction : 'hide',
             plain : true,
@@ -51,7 +51,7 @@ Ext.define('Cooper4.plugins.core.index.LoginWin',{
                         frame : true,
                         id : 'loginForm',
                         defaults : {
-                            width : 330
+                            width : 310
                         },
                         //bodyStyle : 'padding:20 50 50 50;',
                         bodyPadding : 12,
@@ -110,8 +110,7 @@ Ext.define('Cooper4.plugins.core.index.LoginWin',{
                 }
             }),{
                 region : 'north',
-                contentEl : 'hello-tabs',
-                heigth : 30
+                contentEl : 'hello-tabs'
             }],
             buttons : [{
                 text : '登\t\t录',

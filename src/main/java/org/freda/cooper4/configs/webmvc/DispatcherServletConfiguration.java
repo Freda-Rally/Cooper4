@@ -14,7 +14,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 @Configuration
 public class DispatcherServletConfiguration
 {
-    private static final String[] DISPATCHER_SERVLET_URL = {"*.freda","*.js","*.css","*.jsp","*.png","*.jpg"};
+    private static final String[] DISPATCHER_SERVLET_URL = {"*.freda","*.js","*.css","*.jsp","*.png","*.jpg","*.gif"};
 
     /**
      * 修改DispatcherServlet默认配置
