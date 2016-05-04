@@ -49,6 +49,27 @@ var Cooper4 = Cooper4 || {};
         SUBMIT_MODE_ADD : "add",
 
         /**
+         * 获得当前格式化时间.
+         * @param now
+         * @returns {string}
+         */
+        currentTime : function(now){
+
+            var mm = now.getMinutes();
+            var ss = now.getTime() % 60000;
+            ss = (ss - (ss % 1000)) / 1000;
+            var clock = now.getHours() +':';
+            if(mm < 10){
+                clock += '0';
+            }
+            clock += mm + ':';
+            if(ss < 10) {
+                clock += '0';
+            }
+            return now.getFullYear() + "-"+(now.getMonth()+1)+"-"+now.getDate() + " " + clock + ss;
+        },
+
+        /**
          *
          * 判断是否为手机号码..
          *

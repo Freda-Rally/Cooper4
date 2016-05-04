@@ -8,7 +8,8 @@ Ext.define("Cooper4.plugins.core.main.Index",{
 
     requires: [
         'Cooper4.plugins.core.main.LeftTreePanel',
-        'Cooper4.ux.IFrameComponent'
+        'Cooper4.ux.IFrameComponent',
+        'Cooper4.ux.Ajax'
     ],
 
     //centerPanel : {},
@@ -16,7 +17,6 @@ Ext.define("Cooper4.plugins.core.main.Index",{
     constructor : function(){
 
         var that = this;
-
         //Tab.
         that.centerPanel = Ext.create("Ext.tab.Panel",{
             //activeTab: 0,
@@ -25,7 +25,7 @@ Ext.define("Cooper4.plugins.core.main.Index",{
             layout : 'fit',
             items : [{
                 layout : 'fit',
-                title : '我的工作台',
+                title : '欢迎页',
                 id : 'tab_myWorkPanel',
                 items : [Ext.create('Cooper4.ux.IFrameComponent',{id : '_myWorkPanel' ,url : '/index/myBranchPageInit.freda'})]
             }]
@@ -46,15 +46,13 @@ Ext.define("Cooper4.plugins.core.main.Index",{
         //Viewport
         Ext.create('Ext.container.Viewport', {
             layout : 'border',
+
             maskText : '玩命加载中....',
             items : [{
-                collapsible : false,
                 width : 210,
                 layout : 'fit',
-                minSize : 160,
-                maxSize : 280,
                 border : false,
-                split : true,
+                split : false,
                 region : 'west',
                 autoScroll : true,
                 items : [leftTree]
@@ -86,12 +84,65 @@ Ext.define("Cooper4.plugins.core.main.Index",{
             listeners : [{
                 'beforerender' : function(o, eOpts){
 
-                    //Ext.getBody().mask(this.maskText == '' ? "玩命加载中.." : this.maskText);
+                    Ext.getBody().mask("玩命加载中..");
+                }
+            },{
+                'afterrender' : function(o,eOpts){
+
+                    Ext.getBody().unmask();
                 }
             }]
         });
-    },
 
+        Ext.get('logoutBin').on('click',function(e){
+
+            that.logout();
+        });
+
+    },
+    /**
+     * 退出
+     */
+    logout : function(){
+
+        Ext.Msg.show({
+            title:'提示',
+            message: '确定退出系统?',
+            buttons: Ext.Msg.YESNO,
+            icon: Ext.Msg.QUESTION,
+            fn: function(btn) {
+
+                if (btn === 'yes'){
+
+                    Cooper4.ux.Ajax.request({
+
+                        url : '/index/logout.freda',
+
+                        success: function(response){
+
+                            var result = Ext.JSON.decode(response.responseText);
+                            Ext.Msg.show({
+                                title:'提示',
+                                message: result.msg,
+                                buttons: Ext.Msg.OK,
+                                fn: function(btn) {
+
+                                    if (btn === 'ok') {
+
+                                        window.location.href = '/index/indexPageInit.freda';
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    },
+    /**
+     * 创建Tab
+     * @param record
+     */
     createTab : function(record){
 
         var that = this;
@@ -112,6 +163,5 @@ Ext.define("Cooper4.plugins.core.main.Index",{
             }
             that.centerPanel.setActiveTab(tab);
         }
-
     }
 });

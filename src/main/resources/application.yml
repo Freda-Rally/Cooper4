@@ -5,7 +5,7 @@ server:
 spring:
   profiles.active: DEVELOP
   thymeleaf:
-    cache: true
+    cache: false
 #JDBC
 jdbc:
   driverClass: com.mysql.jdbc.Driver

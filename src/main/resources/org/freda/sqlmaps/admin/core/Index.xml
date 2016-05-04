@@ -57,6 +57,7 @@
         ORDER BY _COOPER4_MENU._SORTNO,_COOPER4_MENU._MENUID ASC
     </select>
 
+    <!-- 更新密码 -->
     <update id="editPwd" parameterType="dto">
         UPDATE _COOPER4_USER SET
             _COOPER4_USER._PASSWORD = #{newPwd}
@@ -64,5 +65,15 @@
             _COOPER4_USER._USERID = #{userId}
             AND _COOPER4_USER._PASSWORD = #{oldPwd}
     </update>
+
+    <!-- 加载菜单JS类.或请求地址. -->
+    <select id="loadMenuRequest" parameterType="dto" resultType="dto">
+        SELECT
+            _COOPER4_MENU._REQUEST AS mRequest,
+            _COOPER4_MENU._EXTEND AS mExtend
+        FROM _COOPER4_MENU
+        WHERE
+            _COOPER4_MENU._MENUID = #{mId}
+    </select>
 
 </mapper>

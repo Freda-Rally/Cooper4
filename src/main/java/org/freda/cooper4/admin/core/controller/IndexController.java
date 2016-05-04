@@ -4,6 +4,7 @@ import org.freda.cooper4.admin.core.service.IndexService;
 import org.freda.cooper4.admin.core.utils.CoreContainer;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseController;
 import org.freda.cooper4.common.vo.UserInfoVo;
+import org.freda.cooper4.framework.datastructure.Dto;
 import org.freda.cooper4.framework.json.JsonHelper;
 import org.freda.cooper4.framework.utils.FredaUtils;
 import org.freda.cooper4.framework.utils.SystemContainer;
@@ -29,6 +30,8 @@ public class IndexController extends Cooper4AdminBaseController
 {
     @Resource(name = "indexService")
     private IndexService indexService;
+
+    private static final String TO_CONTROLLER_HEAD = "redirect:";
 
     /**
      *
@@ -72,7 +75,17 @@ public class IndexController extends Cooper4AdminBaseController
     @RequestMapping(value = "/tabPageInit",method = RequestMethod.GET)
     public String tabPageInit(HttpServletRequest request,HttpServletResponse response)throws Exception
     {
-        return SystemContainer.SYSTEM_PAGES_TEMPLATE[2];
+        Dto rDto = (Dto)cooper4Reader.queryForObject("Admin.Core.loadMenuRequest",super.getParamsAsDto(request));
+
+        String mRequest = rDto.getAsString("mRequest");
+
+        if(FredaUtils.isNotEmpty(mRequest) && mRequest.indexOf(".freda",mRequest.length()-6) != -1)
+        {
+            request.setAttribute(SystemContainer.SYSTEM_TAB_JS_CLS,mRequest);
+
+            return SystemContainer.SYSTEM_PAGES_TEMPLATE[2];
+        }
+        return TO_CONTROLLER_HEAD + mRequest;
     }
 
     /**

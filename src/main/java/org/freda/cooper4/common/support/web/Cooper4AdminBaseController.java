@@ -1,7 +1,7 @@
 package org.freda.cooper4.common.support.web;
 
 import org.freda.cooper4.common.vo.UserInfoVo;
-import org.freda.cooper4.framework.dao.FredaDao;
+import org.freda.cooper4.framework.dao.FredaReader;
 import org.freda.cooper4.framework.datastructure.Dto;
 import org.freda.cooper4.framework.datastructure.ParamsDto;
 import org.freda.cooper4.framework.web.support.BaseController;
@@ -20,7 +20,7 @@ public abstract class Cooper4AdminBaseController extends BaseController
      */
 
     @Autowired
-    protected FredaDao cooper4Dao;
+    protected FredaReader cooper4Reader;
 
     /**
      * 获取当前用户.
