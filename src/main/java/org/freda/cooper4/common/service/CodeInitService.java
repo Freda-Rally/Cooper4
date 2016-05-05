@@ -12,4 +12,9 @@ public interface CodeInitService
      * 初始化系统数据字典.将字典参数放入EhCache.
      */
     public abstract void init();
+
+    /**
+     * 销毁
+     */
+    public abstract void destroyed();
 }

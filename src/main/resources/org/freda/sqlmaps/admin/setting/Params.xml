@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admin.setting.Params">
+
+    <!-- 为初始化查询全部 -->
+    <select id="queryAll4Init" resultType="dto">
+        SELECT
+            _COOPER4_PARAM._KEY AS pKey,
+            _COOPER4_PARAM._VALUE AS pValue,
+            _COOPER4_PARAM._DESC AS pDesc
+        FROM _COOPER4_PARAM
+        ORDER BY _COOPER4_PARAM._PARAMID ASC
+    </select>
+
+    <!--&lt;!&ndash; 管理查询用 &ndash;&gt;-->
+    <!--<select id="query4Page" parameterType="dto" resultType="dto">-->
+
+    <!--</select>-->
+
+</mapper>

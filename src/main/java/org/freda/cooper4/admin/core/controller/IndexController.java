@@ -75,7 +75,7 @@ public class IndexController extends Cooper4AdminBaseController
     @RequestMapping(value = "/tabPageInit",method = RequestMethod.GET)
     public String tabPageInit(HttpServletRequest request,HttpServletResponse response)throws Exception
     {
-        Dto rDto = (Dto)cooper4Reader.queryForObject("Admin.Core.loadMenuRequest",super.getParamsAsDto(request));
+        Dto rDto = (Dto)cooper4Reader.queryForObject("admin.core.Index.loadMenuRequest",super.getParamsAsDto(request));
 
         String mRequest = rDto.getAsString("mRequest");
 

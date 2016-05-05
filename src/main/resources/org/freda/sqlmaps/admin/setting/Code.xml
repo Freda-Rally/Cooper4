@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admin.setting.Code">
+
+    <!-- 为初始化查询全部 -->
+    <select id="queryAll4Init" resultType="dto">
+      SELECT
+          _COOPER4_CODE._FIELD AS field,
+          _COOPER4_CODE._FIELDNAME AS fieldName,
+          _COOPER4_CODE._CODE AS codeValue,
+          _COOPER4_CODE._CODEDESC AS codeDesc
+        FROM _COOPER4_CODE
+        WHERE
+          _COOPER4_CODE._STATUS = 1
+        ORDER BY _COOPER4_CODE._FIELD,_COOPER4_CODE._SORTNO ASC
+    </select>
+
+    <!--&lt;!&ndash; 管理查询用 &ndash;&gt;-->
+    <!--<select id="query4Page" parameterType="dto" resultType="dto">-->
+
+    <!--</select>-->
+
+</mapper>

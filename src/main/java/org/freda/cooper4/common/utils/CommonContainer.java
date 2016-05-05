@@ -8,5 +8,11 @@ package org.freda.cooper4.common.utils;
  */
 public class CommonContainer
 {
-    public static final String CACHE_DB_ID_NAME = "DB_ID_SEQUENCE";
+    public static final String CACHE_DB_ID_NAME = "DBIDSequence";
+
+    public static final String CACHE_CODE_NAME = "CodeCache";
+
+    public static final String CACHE_CODE_KEY = "CACHE_CODE_KEY";
+
+    public static final String APPLICATION_PARAMS_NAME = "SYSTEM_PARAMS_KEY";
 }

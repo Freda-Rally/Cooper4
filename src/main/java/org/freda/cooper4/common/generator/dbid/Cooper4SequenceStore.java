@@ -41,7 +41,7 @@ public class Cooper4SequenceStore implements SequenceStore
         sequenceModel.setSequence(pSequence);
         cooper4EhCacheCacheManager.getCache(CommonContainer.CACHE_DB_ID_NAME).put(pSequenceId,sequenceModel);
         //更新DB
-        cooper4Dao.update("Common.DBIDSequence.editSequence",sequenceModel);
+        cooper4Dao.update("common.DBIDSequence.editSequence",sequenceModel);
     }
 
     @Override

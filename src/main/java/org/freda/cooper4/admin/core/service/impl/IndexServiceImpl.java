@@ -36,7 +36,7 @@ public class IndexServiceImpl extends Cooper4AdminBaseServiceImpl implements Ind
 
         pDto.put("userType",super.getUserInfoVo(pDto).getUserType());
 
-        return super.getDao().queryForList("Admin.Core.queryMenu", pDto);
+        return super.getDao().queryForList("admin.core.Index.queryMenu", pDto);
     }
 
     /**
@@ -54,7 +54,7 @@ public class IndexServiceImpl extends Cooper4AdminBaseServiceImpl implements Ind
 
         pDto.put("newPwd",CodecUtils.decryptBasedDes(pDto.getAsString("newPwd")));
 
-        if (super.getDao().update("Admin.Core.editPwd", pDto) > 0)
+        if (super.getDao().update("admin.core.Index.editPwd", pDto) > 0)
         {
             return true;
         }
@@ -72,6 +72,6 @@ public class IndexServiceImpl extends Cooper4AdminBaseServiceImpl implements Ind
     {
         pDto.put("password", CodecUtils.encryptBasedDes(pDto.getAsString("password")));
 
-        return (UserInfoVo)super.getDao().queryForObject("Admin.Core.queryUser", pDto);
+        return (UserInfoVo)super.getDao().queryForObject("admin.core.Index.queryUser", pDto);
     }
 }
