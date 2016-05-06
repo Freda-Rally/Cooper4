@@ -8,6 +8,7 @@
 Ext.Loader.setConfig({enabled:true});
 Ext.Loader.setPath('Cooper4.ux', '/framework/cooper4/js/ux');
 Ext.Loader.setPath('Cooper4.plugins', '/include/plugins');
+Ext.Loader.setPath('Ext.ux','/framework/extjs/ux')
 
 Ext.onReady(function(){
 

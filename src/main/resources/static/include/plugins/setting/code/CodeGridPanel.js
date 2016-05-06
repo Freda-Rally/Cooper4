@@ -9,6 +9,8 @@ Ext.define('Cooper4.plugins.setting.code.CodeGridPanel',{
 
     extend: 'Ext.panel.Panel',
 
+    requires : ['Ext.ux.ProgressBarPager'],
+
     constructor : function(config){
 
         var that = this;
@@ -77,10 +79,10 @@ Ext.define('Cooper4.plugins.setting.code.CodeGridPanel',{
                 columns : [{
                     xtype: 'rownumberer'
                 },{
-                    text : '集合名称',
+                    text : '字典集合名称',
                     dataIndex : 'fieldId'
                 },{
-                    text : '字典描述',
+                    text : '描述',
                     dataIndex: 'fieldName'
                 },{
                     text : '名称',
@@ -102,16 +104,37 @@ Ext.define('Cooper4.plugins.setting.code.CodeGridPanel',{
                     dataIndex : 'status',
                     renderer : function(value){
                         if(value == 1)
-                            return "<font color=green>" + getCodeText('STATUS',value) + "</font>";
+                            return "<font color=green>" + Cooper4.getCodeText('STATUS',value) + "</font>";
                         else
-                            return "<font color=red>" + getCodeText('STATUS',value) + "</font>";
+                            return "<font color=red>" + Cooper4.getCodeText('STATUS',value) + "</font>";
                     }
                 },{
                     text : '创建时间',
                     dataIndex : 'createTime'
                 }],
                 //工具栏.
-                tbar : [{
+                tbar : ['-',{
+                    text : '新增',
+                    iconCls : 'page_addIcon',
+                    handler : function() {
+
+                        that.onAddBtnClick(Cooper4.SUBMIT_MODE_ADD);
+                    }
+                },{
+                    text : '编辑',
+                    iconCls : 'page_edit_1Icon',
+                    handler : function() {
+
+                        that.onEditBtnClick(Cooper4.SUBMIT_MODE_EDIT);
+                    }
+                },{
+                    text : '删除',
+                    iconCls : 'page_delIcon',
+                    handler : function() {
+
+                        that.onDeleteBtnClick();
+                    }
+                },'-',{
                     xtype : 'textfield',
                     id : 'queryContent',
                     name : 'queryContent',
@@ -121,14 +144,8 @@ Ext.define('Cooper4.plugins.setting.code.CodeGridPanel',{
                     listeners : {
                         specialkey : function(field, e) {
                             if (e.getKey() == Ext.EventObject.ENTER) {
-                                var queryContent = Ext.getCmp('queryContent').getValue();
-                                Ext.data.StoreManager.lookup('codeStore').load({
-                                    params : {
-                                        start : 0,
-                                        limit : 50,
-                                        queryContent : queryContent
-                                    }
-                                });
+
+                                Ext.data.StoreManager.lookup('codeStore').load();
                             }
                         }
                     }
@@ -136,34 +153,15 @@ Ext.define('Cooper4.plugins.setting.code.CodeGridPanel',{
                     text : '查询',
                     iconCls : 'page_findIcon',
                     handler : function() {
-                        var queryContent = Ext.getCmp('queryContent').getValue();
-                        Ext.data.StoreManager.lookup('codeStore').load({
-                            params : {
-                                start : 0,
-                                limit : 50,
-                                queryContent : queryContent
-                            }
-                        });
+
+                        Ext.data.StoreManager.lookup('codeStore').load();
                     }
-                },'->','-',{
-                    text : '添加',
-                    iconCls : 'page_addIcon',
-                    handler : function() {
-                    }
-                },'-',{
-                    text : '编辑',
-                    iconCls : 'page_edit_1Icon',
-                    handler : function() {
-                    }
-                },'-',{
-                    text : '删除',
-                    iconCls : 'page_delIcon',
-                    handler : function() {
-                    }
-                },'-',{
-                    text : '内存同步',
+                },'->',{
+                    text : '同步',
                     iconCls : 'arrow_switchIcon',
                     handler : function() {
+
+                        that.onMoneySynBtnClick();
                     }
                 }],
                 //分页工具栏
@@ -171,7 +169,8 @@ Ext.define('Cooper4.plugins.setting.code.CodeGridPanel',{
                     xtype : 'pagingtoolbar',
                     store : Ext.data.StoreManager.lookup('codeStore'),
                     dock : 'bottom',
-                    displayInfo : true
+                    displayInfo : true,
+                    plugins: new Ext.ux.ProgressBarPager()
                 }],
                 //单选或多选.
                 selModel :{
@@ -184,18 +183,38 @@ Ext.define('Cooper4.plugins.setting.code.CodeGridPanel',{
     /**
      * 添加按钮触发.
      */
-    onAddBtnClick : function(){},
+    onAddBtnClick : function(mode){
+
+        var that = this;
+
+        this.fireEvent('eventOnAddBtnClick',Ext.getCmp('codeGrid'),mode);
+    },
     /**
      * 修改点击触发.
      */
-    onEditBtnClick : function(){},
+    onEditBtnClick : function(mode){
+
+        var that = this;
+
+        this.fireEvent('eventOnEditBtnClick',Ext.getCmp('codeGrid'),mode);
+    },
     /**
      * 删除点击触发.
      */
-    onDeleteBtnClick : function(){},
+    onDeleteBtnClick : function(){
+
+        var that = this;
+
+        this.fireEvent('eventOnDeleteBtnClick',Ext.getCmp('codeGrid'));
+    },
     /**
      * 内存同步点击出发.
      */
-    onMoneySynBtnClick : function(){}
+    onMoneySynBtnClick : function(){
+
+        var that = this;
+
+        this.fireEvent('eventOnMoneySynBtnClick',Ext.getCmp('codeGrid'));
+    }
 
 });

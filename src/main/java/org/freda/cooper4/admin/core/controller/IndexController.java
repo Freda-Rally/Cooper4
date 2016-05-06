@@ -86,7 +86,7 @@ public class IndexController extends Cooper4AdminBaseController
 
         String mRequest = rDto.getAsString("mRequest");
 
-        if(FredaUtils.isNotEmpty(mRequest) && mRequest.indexOf(".freda",mRequest.length()-6) != -1)
+        if(FredaUtils.isNotEmpty(mRequest) && mRequest.indexOf(".freda",mRequest.length()-6) == -1)
         {
             request.setAttribute(SystemContainer.SYSTEM_TAB_JS_CLS,mRequest);
 

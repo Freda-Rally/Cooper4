@@ -48,13 +48,13 @@
             _COOPER4_CODE._EDITMODE,
             _COOPER4_CODE._SORTNO,
             _COOPER4_CODE._CREATETIME
-        )VALUES(#{codeId},#{field},#{fieldName},#{code},#{codeDesc},#{status},#{editMode},#{sortNo},NOW())
+        )VALUES(#{codeId},#{fieldId},#{fieldName},#{code},#{codeDesc},#{status},1,#{sortNo},NOW())
     </insert>
 
     <!-- 编辑 -->
     <update id="edit" parameterType="dto">
         UPDATE _COOPER4_CODE SET
-            _COOPER4_CODE._FIELD = #{field},
+            _COOPER4_CODE._FIELD = #{fieldId},
             _COOPER4_CODE._FIELDNAME = #{fieldName},
             _COOPER4_CODE._CODE = #{code},
             _COOPER4_CODE._CODEDESC = #{codeDesc},

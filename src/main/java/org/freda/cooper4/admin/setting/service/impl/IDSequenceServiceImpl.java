@@ -31,7 +31,7 @@ public class IDSequenceServiceImpl extends Cooper4AdminBaseServiceImpl implement
 
         for (DBSequenceModel sequence : sequenceList)
         {
-            super.getTools().getCooper4EhCacheCacheManager().getCache(CommonContainer.CACHE_DB_ID_NAME).put(sequence.getSequenceId(),sequence);
+            super.getTools().getCooper4EhCacheCacheManager().getCache(CommonContainer.CACHE_DB_ID_NAME).put(sequence.getFieldName(),sequence);
         }
         log.info("数据库表主键ID Store加载成功..");
     }

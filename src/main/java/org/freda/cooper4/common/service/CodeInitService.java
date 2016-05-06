@@ -14,7 +14,7 @@ public interface CodeInitService
     public abstract void init();
 
     /**
-     * 销毁
+     * 重新初始化.
      */
-    public abstract void destroyed();
+    public abstract void reInit();
 }

@@ -52,9 +52,19 @@ public class CodeServiceImpl extends Cooper4AdminBaseServiceImpl implements Code
     }
 
     /**
-     * 销毁
+     * 重新初始化.
      */
     @Override
+    public void reInit()
+    {
+        this.destroyed();
+
+        this.init();
+    }
+
+    /**
+     * 销毁
+     */
     public void destroyed()
     {
         //清除缓存

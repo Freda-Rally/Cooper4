@@ -6,7 +6,7 @@
  */
 
 
-var Cooper4 = Cooper4 || parent.window.Cooper4 || {};
+var Cooper4 = Cooper4 || {};
 
 (function(){
 
@@ -47,9 +47,6 @@ var Cooper4 = Cooper4 || parent.window.Cooper4 || {};
     };
 
     Cooper4.apply(Cooper4,{
-
-        SYSTEM_CODE : '',
-
         /**
          * 获得当前格式化时间.
          * @param now
@@ -179,11 +176,11 @@ var Cooper4 = Cooper4 || parent.window.Cooper4 || {};
         getCodeText : function(fieldId,code){
 
             var codeText = "";
-            for(var i=0;i<this.SYSTEM_CODE.length;i++){
+            for(var i=0;i<Cooper4.SYSTEM_CODE.length;i++){
 
-                if(this.SYSTEM_CODE[i].field == fieldId && this.SYSTEM_CODE[i].codeValue == code){
+                if(Cooper4.SYSTEM_CODE[i].field == fieldId && Cooper4.SYSTEM_CODE[i].codeValue == code){
 
-                    codeText = this.SYSTEM_CODE[i].codeDesc;
+                    codeText = Cooper4.SYSTEM_CODE[i].codeDesc;
                     break;
                 }
             }
@@ -196,13 +193,13 @@ var Cooper4 = Cooper4 || parent.window.Cooper4 || {};
         getCodeArray : function(fieldId){
 
             var codeArray = [];
-            for(var i=0;i<this.SYSTEM_CODE.length;i++){
+            for(var i=0;i<Cooper4.SYSTEM_CODE.length;i++){
 
-                if(this.SYSTEM_CODE[i].field == fieldId){
+                if(Cooper4.SYSTEM_CODE[i].field == fieldId){
 
                     codeArray.push({
-                        name : this.SYSTEM_CODE[i].codeDesc,
-                        code : this.SYSTEM_CODE[i].codeValue
+                        name : Cooper4.SYSTEM_CODE[i].codeDesc,
+                        code : Cooper4.SYSTEM_CODE[i].codeValue
                     });
                 }
             }

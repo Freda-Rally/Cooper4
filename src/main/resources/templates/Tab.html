@@ -5,7 +5,7 @@
     <title>Cooper4 Tab Page</title>
     <link th:href="@{/framework/cooper4/css/ext_icon.css}" rel="stylesheet"/>
     <link th:href="@{/framework/extjs/packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css}" rel="stylesheet" />
-    <link th:href="@{/framework/kindeditor/themes/default/default.css}">
+    <link th:href="@{/framework/kindeditor/themes/default/default.css}" rel="stylesheet"/>
 
     <script type="text/javascript" th:src="@{/framework/extjs/ext-all.js}"></script>
     <script type="text/javascript" th:src="@{/framework/extjs/packages/ext-locale/build/ext-locale-zh_CN.js}"></script>
@@ -18,11 +18,13 @@
     <script type="text/javascript">
         //请求Tab页面JS..
         Ext.require([
-            '${SYSTEM_TAB_JS_CLS}'
+            'Cooper4.plugins.setting.code.Index'
         ]);
         //创建Tab页面JS..
         Ext.onReady(function(){
-            Ext.create('${SYSTEM_TAB_JS_CLS}',{});
+            Cooper4.SYSTEM_CODE = me.Cooper4.SYSTEM_CODE;
+            Ext.create('Cooper4.plugins.setting.code.Index',{});
+            parent.window.Ext.getBody().unmask();
         });
     </script>
 </body>

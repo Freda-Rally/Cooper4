@@ -2,6 +2,7 @@ package org.freda.cooper4.admin.setting.controller;
 
 import com.github.pagehelper.Page;
 import org.freda.cooper4.admin.setting.service.CodeManagerService;
+import org.freda.cooper4.common.service.CodeInitService;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseController;
 import org.freda.cooper4.framework.json.JsonHelper;
 import org.freda.cooper4.framework.utils.SystemContainer;
@@ -69,7 +70,7 @@ public class CodeController extends Cooper4AdminBaseController
     @RequestMapping(value = "/edit")
     public String edit(HttpServletRequest request,HttpServletResponse response) throws Exception
     {
-        codeManagerService.add(super.getParamsAsDto(request));
+        codeManagerService.edit(super.getParamsAsDto(request));
 
         super.setOkTipMsg(SystemContainer.TIPS_SUCCESS_MSG,response);
 
@@ -87,6 +88,25 @@ public class CodeController extends Cooper4AdminBaseController
     public String delete(HttpServletRequest request,HttpServletResponse response) throws Exception
     {
         codeManagerService.delete(super.getParamsAsDto(request));
+
+        super.setOkTipMsg(SystemContainer.TIPS_SUCCESS_MSG,response);
+
+        return null;
+    }
+
+    /**
+     * 将Code重新同步至EhCache中.
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/synToCache")
+    public String synToCache(HttpServletRequest request,HttpServletResponse response) throws Exception
+    {
+        CodeInitService codeInitService = (CodeInitService) codeManagerService;
+
+        codeInitService.reInit();
 
         super.setOkTipMsg(SystemContainer.TIPS_SUCCESS_MSG,response);
 
