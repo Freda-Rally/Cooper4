@@ -15,9 +15,61 @@
         ORDER BY _COOPER4_CODE._FIELD,_COOPER4_CODE._SORTNO ASC
     </select>
 
-    <!--&lt;!&ndash; 管理查询用 &ndash;&gt;-->
-    <!--<select id="query4Page" parameterType="dto" resultType="dto">-->
+    <!-- 管理查询用 -->
+    <select id="query4Page" parameterType="dto" resultType="dto">
+        SELECT
+            _COOPER4_CODE._CODEID AS codeId,
+            _COOPER4_CODE._FIELD AS fieldId,
+            _COOPER4_CODE._FIELDNAME AS fieldName,
+            _COOPER4_CODE._CODE AS code,
+            _COOPER4_CODE._CODEDESC AS codeDesc,
+            _COOPER4_CODE._STATUS AS status,
+            _COOPER4_CODE._EDITMODE AS editMode,
+            _COOPER4_CODE._SORTNO AS sortNo,
+            _COOPER4_CODE._CREATETIME AS createTime
+        FROM _COOPER4_CODE
+        WHERE
+            1=1
+            <if test="queryContent != null">
+                AND _COOPER4_CODE._FIELD LIKE '%${queryContent}%'
+            </if>
+        ORDER BY _COOPER4_CODE._FIELD,_COOPER4_CODE._SORTNO ASC
+    </select>
 
-    <!--</select>-->
+    <!-- 添加 -->
+    <insert id="add" parameterType="dto">
+        INSERT INTO _COOPER4_CODE(
+            _COOPER4_CODE._CODEID,
+            _COOPER4_CODE._FIELD,
+            _COOPER4_CODE._FIELDNAME,
+            _COOPER4_CODE._CODE,
+            _COOPER4_CODE._CODEDESC,
+            _COOPER4_CODE._STATUS,
+            _COOPER4_CODE._EDITMODE,
+            _COOPER4_CODE._SORTNO,
+            _COOPER4_CODE._CREATETIME
+        )VALUES(#{codeId},#{field},#{fieldName},#{code},#{codeDesc},#{status},#{editMode},#{sortNo},NOW())
+    </insert>
+
+    <!-- 编辑 -->
+    <update id="edit" parameterType="dto">
+        UPDATE _COOPER4_CODE SET
+            _COOPER4_CODE._FIELD = #{field},
+            _COOPER4_CODE._FIELDNAME = #{fieldName},
+            _COOPER4_CODE._CODE = #{code},
+            _COOPER4_CODE._CODEDESC = #{codeDesc},
+            _COOPER4_CODE._STATUS = #{status},
+            _COOPER4_CODE._SORTNO = #{sortNo}
+        WHERE
+            _COOPER4_CODE._CODEID = #{codeId}
+            AND _COOPER4_CODE._EDITMODE = 1
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="dto">
+        DELETE FROM _COOPER4_CODE
+        WHERE
+            _COOPER4_CODE._CODEID = #{codeId} AND _COOPER4_CODE._EDITMODE = 1
+    </delete>
 
 </mapper>

@@ -32,6 +32,10 @@
         ]);
         //创建Main页面JS..
         Ext.onReady(function(){
+            //将code的值放入Cooper4工具类中.
+            //暂时想不到好的办法将数据字典传到前台..只好使用笨办法..
+            Cooper4.SYSTEM_CODE = Ext.JSON.decode(Ext.get('codeHidden').getValue());
+
             Ext.create('Cooper4.plugins.core.main.Index',{});
         });
         //时间
@@ -39,5 +43,7 @@
             document.getElementById("timeDiv").innerHTML = Cooper4.currentTime(new Date())
         },1000);
     </script>
+
+    <input type="hidden" id="codeHidden" th:value="${CodeCache}" />
 </body>
 </html>

@@ -1,7 +1,9 @@
 package org.freda.cooper4.configs.mybatis;
 
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.freda.cooper4.common.support.web.MapperInterface;
 import org.freda.cooper4.configs.datasource.DataSourceConfiguration;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  *
@@ -67,9 +70,19 @@ public class MyBatisConfiguration implements EnvironmentAware,TransactionManagem
 
             sqlSessionFactoryBean.setDataSource(basicDataSource);
 
-            //sqlSessionFactoryBean.setConfigLocation(new DefaultResourceLoader().getResource(propertyResolver.getProperty("mapperConfig")));
-
             sqlSessionFactoryBean.setTypeAliases(new Class[]{BaseDto.class});
+
+            PageHelper pageHelper = new PageHelper();//分页插件.
+
+            Properties properties = new Properties();
+
+            properties.setProperty("dialect", "mysql");//如果使用其他数据库..请修改此处.
+
+            properties.setProperty("rowBoundsWithCount","true");
+
+            pageHelper.setProperties(properties);
+
+            sqlSessionFactoryBean.setPlugins(new Interceptor[]{pageHelper});
 
             sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(propertyResolver.getProperty("mapperLocations")));
 

@@ -6,7 +6,7 @@
  */
 
 
-var Cooper4 = Cooper4 || {};
+var Cooper4 = Cooper4 || parent.window.Cooper4 || {};
 
 (function(){
 
@@ -16,6 +16,10 @@ var Cooper4 = Cooper4 || {};
     Cooper4.global = global;
 
     Cooper4.enumerables = enumerables;
+
+    Cooper4.SUBMIT_MODE_EDIT = "edit";
+
+    Cooper4.SUBMIT_MODE_ADD  =  "add";
 
     Cooper4.apply = function(object, config, defaults) {
         if (defaults) {
@@ -44,9 +48,7 @@ var Cooper4 = Cooper4 || {};
 
     Cooper4.apply(Cooper4,{
 
-        SUBMIT_MODE_EDIT : "edit",
-
-        SUBMIT_MODE_ADD : "add",
+        SYSTEM_CODE : '',
 
         /**
          * 获得当前格式化时间.
@@ -168,6 +170,43 @@ var Cooper4 = Cooper4 || {};
         showAlert : function(msg) {
 
             Ext.MessageBox.alert("温馨提示","<span>提示:</span>&nbsp;&nbsp;" + msg);
+        },
+        /**
+         * 根据field与code获取描述
+         * @param fieldId
+         * @param code
+         */
+        getCodeText : function(fieldId,code){
+
+            var codeText = "";
+            for(var i=0;i<this.SYSTEM_CODE.length;i++){
+
+                if(this.SYSTEM_CODE[i].field == fieldId && this.SYSTEM_CODE[i].codeValue == code){
+
+                    codeText = this.SYSTEM_CODE[i].codeDesc;
+                    break;
+                }
+            }
+            return codeText;
+        },
+        /**
+         * 根据fieldId获取相应的字典集合.
+         * @param fieldId
+         */
+        getCodeArray : function(fieldId){
+
+            var codeArray = [];
+            for(var i=0;i<this.SYSTEM_CODE.length;i++){
+
+                if(this.SYSTEM_CODE[i].field == fieldId){
+
+                    codeArray.push({
+                        name : this.SYSTEM_CODE[i].codeDesc,
+                        code : this.SYSTEM_CODE[i].codeValue
+                    });
+                }
+            }
+            return codeArray;
         }
 
     });

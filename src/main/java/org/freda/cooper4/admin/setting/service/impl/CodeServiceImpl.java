@@ -3,6 +3,7 @@ package org.freda.cooper4.admin.setting.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.freda.cooper4.admin.setting.service.CodeManagerService;
+import org.freda.cooper4.common.generator.dbid.Cooper4DBIdHelper;
 import org.freda.cooper4.common.service.CodeInitService;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseServiceImpl;
 import org.freda.cooper4.common.utils.CommonContainer;
@@ -21,8 +22,7 @@ import java.util.List;
  * Created by rally on 16/5/4.
  */
 @Service
-public class CodeServiceImpl extends Cooper4AdminBaseServiceImpl implements CodeManagerService,CodeInitService
-{
+public class CodeServiceImpl extends Cooper4AdminBaseServiceImpl implements CodeManagerService,CodeInitService, org.freda.cooper4.common.service.CodeLoadService {
 
     private static final Log log = LogFactory.getLog(CodeServiceImpl.class);
 
@@ -69,7 +69,9 @@ public class CodeServiceImpl extends Cooper4AdminBaseServiceImpl implements Code
     @Override
     public void add(Dto pDto)
     {
-        super.getDao().insert("",pDto);
+        pDto.put("codeId", Cooper4DBIdHelper.getDbTableID("CODEID"));
+
+        super.getDao().insert("admin.setting.Code.add",pDto);
     }
 
     /**
@@ -80,7 +82,7 @@ public class CodeServiceImpl extends Cooper4AdminBaseServiceImpl implements Code
     @Override
     public void edit(Dto pDto)
     {
-        super.getDao().update("",pDto);
+        super.getDao().update("admin.setting.Code.edit",pDto);
     }
 
     /**
@@ -96,9 +98,19 @@ public class CodeServiceImpl extends Cooper4AdminBaseServiceImpl implements Code
 
         for (String id : ids)
         {
-            pDto.put("id",id);
+            pDto.put("codeId",id);
 
-            super.getDao().delete("",pDto);
+            super.getDao().delete("admin.setting.Code.delete",pDto);
         }
+    }
+
+    /**
+     * 从Cache中获取Code
+     * @return
+     */
+    @Override
+    public String getFormCache()
+    {
+        return this.getTools().getCooper4EhCacheCacheManager().getCache(CommonContainer.CACHE_CODE_NAME).get(CommonContainer.CACHE_CODE_KEY, String.class);
     }
 }

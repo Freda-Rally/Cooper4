@@ -2,7 +2,9 @@ package org.freda.cooper4.admin.core.controller;
 
 import org.freda.cooper4.admin.core.service.IndexService;
 import org.freda.cooper4.admin.core.utils.CoreContainer;
+import org.freda.cooper4.common.service.CodeLoadService;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseController;
+import org.freda.cooper4.common.utils.CommonContainer;
 import org.freda.cooper4.common.vo.UserInfoVo;
 import org.freda.cooper4.framework.datastructure.Dto;
 import org.freda.cooper4.framework.json.JsonHelper;
@@ -30,6 +32,9 @@ public class IndexController extends Cooper4AdminBaseController
 {
     @Resource(name = "indexService")
     private IndexService indexService;
+
+    @Resource
+    private CodeLoadService codeLoadService;
 
     private static final String TO_CONTROLLER_HEAD = "redirect:";
 
@@ -60,6 +65,8 @@ public class IndexController extends Cooper4AdminBaseController
     @RequestMapping(value = "/mainPageInit",method = RequestMethod.GET)
     public String mainPageInit(HttpServletRequest request,HttpServletResponse response)throws Exception
     {
+        request.setAttribute(CommonContainer.CACHE_CODE_NAME,codeLoadService.getFormCache());
+
         return SystemContainer.SYSTEM_PAGES_TEMPLATE[1];
     }
 
