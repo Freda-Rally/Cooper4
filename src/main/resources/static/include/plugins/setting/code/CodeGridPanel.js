@@ -23,7 +23,7 @@ Ext.define('Cooper4.plugins.setting.code.CodeGridPanel',{
             autoLoad: false,
             split : true,
             viewConfig:{
-                enableTextSelection:true 
+                 enableTextSelection:true
             },
             items : [Ext.create('Ext.grid.Panel',{
 
