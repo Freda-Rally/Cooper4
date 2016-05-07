@@ -14,5 +14,9 @@ public class CommonContainer
 
     public static final String CACHE_CODE_KEY = "CACHE_CODE_KEY";
 
+    public static final String CACHE_PARAMS_NAME = "ParamsCache";
+
+    public static final String CACHE_PARAMS_KEY = "CACHE_PARAMS_KEY";
+
     public static final String APPLICATION_PARAMS_NAME = "SYSTEM_PARAMS_KEY";
 }

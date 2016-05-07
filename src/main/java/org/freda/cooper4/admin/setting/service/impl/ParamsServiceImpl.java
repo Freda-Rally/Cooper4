@@ -3,6 +3,7 @@ package org.freda.cooper4.admin.setting.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.freda.cooper4.admin.setting.service.ParamsManagerService;
+import org.freda.cooper4.common.generator.dbid.Cooper4DBIdHelper;
 import org.freda.cooper4.common.service.ParamsInitService;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseServiceImpl;
 import org.freda.cooper4.common.utils.CommonContainer;
@@ -51,6 +52,9 @@ public class ParamsServiceImpl extends Cooper4AdminBaseServiceImpl implements Pa
         }
         context.setAttribute(CommonContainer.APPLICATION_PARAMS_NAME,context);
 
+        super.getTools().getCooper4EhCacheCacheManager().getCache(CommonContainer.CACHE_PARAMS_NAME)
+                .put(CommonContainer.CACHE_PARAMS_KEY,contextDto.toJson());
+
         log.info("==============================================================");
         log.info("系统全局参数初始化成功..");
     }
@@ -63,7 +67,9 @@ public class ParamsServiceImpl extends Cooper4AdminBaseServiceImpl implements Pa
     @Override
     public void add(Dto pDto)
     {
-        super.getDao().insert("",pDto);
+        pDto.put("paramId", Cooper4DBIdHelper.getDbTableID("PARAMID"));
+
+        super.getDao().insert("admin.setting.Params.add",pDto);
     }
 
     /**
@@ -74,7 +80,7 @@ public class ParamsServiceImpl extends Cooper4AdminBaseServiceImpl implements Pa
     @Override
     public void edit(Dto pDto)
     {
-        super.getDao().update("",pDto);
+        super.getDao().update("admin.setting.Params.edit",pDto);
     }
 
     /**
@@ -90,9 +96,9 @@ public class ParamsServiceImpl extends Cooper4AdminBaseServiceImpl implements Pa
 
         for (String id : ids)
         {
-            pDto.put("id",id);
+            pDto.put("paramId",id);
 
-            super.getDao().delete("",pDto);
+            super.getDao().delete("admin.setting.Params.delete",pDto);
         }
     }
 }

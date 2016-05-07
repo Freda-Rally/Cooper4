@@ -30,7 +30,7 @@
         FROM _COOPER4_CODE
         WHERE
             1=1
-            <if test="queryContent != null">
+            <if test="queryContent != null and queryContent != ''">
                 AND _COOPER4_CODE._FIELD LIKE '%${queryContent}%'
             </if>
         ORDER BY _COOPER4_CODE._FIELD,_COOPER4_CODE._SORTNO ASC
