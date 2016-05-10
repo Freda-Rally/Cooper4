@@ -17,6 +17,10 @@ var Cooper4 = Cooper4 || {};
 
     Cooper4.enumerables = enumerables;
 
+    Cooper4.SUBMIT_MODE_EDIT = "edit";
+
+    Cooper4.SUBMIT_MODE_ADD  =  "add";
+
     Cooper4.apply = function(object, config, defaults) {
         if (defaults) {
             Cooper4.apply(object, defaults);
@@ -43,10 +47,26 @@ var Cooper4 = Cooper4 || {};
     };
 
     Cooper4.apply(Cooper4,{
+        /**
+         * 获得当前格式化时间.
+         * @param now
+         * @returns {string}
+         */
+        currentTime : function(now){
 
-        SUBMIT_MODE_EDIT : "edit",
-
-        SUBMIT_MODE_ADD : "add",
+            var mm = now.getMinutes();
+            var ss = now.getTime() % 60000;
+            ss = (ss - (ss % 1000)) / 1000;
+            var clock = now.getHours() +':';
+            if(mm < 10){
+                clock += '0';
+            }
+            clock += mm + ':';
+            if(ss < 10) {
+                clock += '0';
+            }
+            return now.getFullYear() + "-"+(now.getMonth()+1)+"-"+now.getDate() + " " + clock + ss;
+        },
 
         /**
          *
@@ -147,6 +167,43 @@ var Cooper4 = Cooper4 || {};
         showAlert : function(msg) {
 
             Ext.MessageBox.alert("温馨提示","<span>提示:</span>&nbsp;&nbsp;" + msg);
+        },
+        /**
+         * 根据field与code获取描述
+         * @param fieldId
+         * @param code
+         */
+        getCodeText : function(fieldId,code){
+
+            var codeText = "";
+            for(var i=0;i<Cooper4.SYSTEM_CODE.length;i++){
+
+                if(Cooper4.SYSTEM_CODE[i].field == fieldId && Cooper4.SYSTEM_CODE[i].codeValue == code){
+
+                    codeText = Cooper4.SYSTEM_CODE[i].codeDesc;
+                    break;
+                }
+            }
+            return codeText;
+        },
+        /**
+         * 根据fieldId获取相应的字典集合.
+         * @param fieldId
+         */
+        getCodeArray : function(fieldId){
+
+            var codeArray = [];
+            for(var i=0;i<Cooper4.SYSTEM_CODE.length;i++){
+
+                if(Cooper4.SYSTEM_CODE[i].field == fieldId){
+
+                    codeArray.push({
+                        name : Cooper4.SYSTEM_CODE[i].codeDesc,
+                        code : Cooper4.SYSTEM_CODE[i].codeValue
+                    });
+                }
+            }
+            return codeArray;
         }
 
     });

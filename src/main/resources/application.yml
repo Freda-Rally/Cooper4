@@ -5,11 +5,12 @@ server:
 spring:
   profiles.active: DEVELOP
   thymeleaf:
-    cache: true
+    cache: false
 #JDBC
 jdbc:
   driverClass: com.mysql.jdbc.Driver
   url: jdbc:mysql://192.168.99.182:3306/cooper4
+  #url: jdbc:mysql://10.3.22.101:3306/cooper4
   username: root
   password: root
   pool:

@@ -141,6 +141,8 @@ Ext.define('Cooper4.plugins.core.main.LeftTreePanel',{
 
         },config)]);
 
+        Ext.getCmp('quickMenuTree').expandAll();
+
     },
 
     createTab : function(record){

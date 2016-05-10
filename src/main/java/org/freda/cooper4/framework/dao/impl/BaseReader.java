@@ -1,5 +1,6 @@
 package org.freda.cooper4.framework.dao.impl;
 
+import com.github.pagehelper.Page;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.RowBounds;
@@ -74,7 +75,7 @@ public abstract class BaseReader extends SqlSessionDaoSupport implements FredaRe
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public List queryForPage(String statementName, Dto qDto) throws SQLException
+    public Page queryForPage(String statementName, Dto qDto) throws SQLException
     {
         String start = qDto.getAsString("start");
         String limit = qDto.getAsString("limit");
@@ -105,12 +106,13 @@ public abstract class BaseReader extends SqlSessionDaoSupport implements FredaRe
             }
         }
 
-        return super.getSqlSession().selectList(statementName, qDto, new RowBounds(intStart.intValue(), end.intValue()));
+        //PageHelper.startPage(intStart,end);
+
+        return (Page)super.getSqlSession().selectList(statementName, qDto, new RowBounds(intStart.intValue(), end.intValue()));
     }
     /**
-     * JSP分页查询
+     * 分页查询 不使用分页插件.
      * @param statementName 结果SQL语句ID号
-     * @param statementCountName 结果COUNT SQL语句ID号
      * @param qDto 查询条件对象(map javaBean)
      * @return
      * @throws SQLException
@@ -118,7 +120,7 @@ public abstract class BaseReader extends SqlSessionDaoSupport implements FredaRe
 
     @SuppressWarnings("unchecked")
     @Override
-    public ResultBean4Page queryForPage(String statementName, String statementCountName, Dto qDto) throws SQLException
+    public ResultBean4Page queryForPage2(String statementName, Dto qDto) throws SQLException
     {
         String page = qDto.getAsString("page");
         String limit = qDto.getAsString("limit");
@@ -149,9 +151,9 @@ public abstract class BaseReader extends SqlSessionDaoSupport implements FredaRe
         }
         List<?> data = super.getSqlSession().selectList(statementName, qDto, new RowBounds(intStart.intValue(), end.intValue()));
 
-        Integer count = (Integer)super.getSqlSession().selectOne(statementCountName, qDto);
+        Long count = ((Page)data).getTotal();
 
-        return new BaseResultBean(data , count ,qDto.getAsInteger("page"),qDto.getAsInteger("limit"));
+        return new BaseResultBean(data , count.intValue() ,qDto.getAsInteger("page"),qDto.getAsInteger("limit"));
     }
 
     /**

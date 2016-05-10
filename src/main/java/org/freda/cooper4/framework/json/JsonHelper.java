@@ -105,7 +105,7 @@ public class JsonHelper
 	 *            记录总数
 	 */
 	@SuppressWarnings("rawtypes")
-	public static final String encodeList2PageJson(List list, Integer totalCount)
+	public static final String encodeList2PageJson(List list, Long totalCount)
 	{
 		String subJsonString = "";
 
@@ -128,7 +128,7 @@ public class JsonHelper
 	 *            时间日期格式化,传null则表明List不包含日期时间属性
 	 */
 	@SuppressWarnings("rawtypes")
-	public static final String encodeList2PageJson(List list, Integer totalCount, String dataFormat)
+	public static final String encodeList2PageJson(List list, Long totalCount, String dataFormat)
 	{
 		String subJsonString = "";
 		if (FredaUtils.isEmpty(dataFormat))

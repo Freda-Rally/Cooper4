@@ -28,6 +28,11 @@ public class SystemContainer
     public static final String SYSTEM_USER_INFO_VO_KEY = "SYSTEM_USER_INFO_VO_KEY";
 
     /**
+     * Tab页面如果使用Ext..那么请加载JS的类地址.
+     */
+    public static final String SYSTEM_TAB_JS_CLS = "SYSTEM_TAB_JS_CLS";
+
+    /**
      * 系统日期格式化参数
      */
     public static final String[] DATE_TIME_FORMART = {

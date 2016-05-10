@@ -88,7 +88,7 @@ public class DefaultSequenceGenerator implements SequenceGenerator
     @Override
     public synchronized long next(String id) throws SequenceCreateException
     {
-        if (!initiated && !this.id.equals(id))
+        if (!initiated && this.id == null && !id.equals(this.id))
             init(id);//初始化.
 
         if (currCount >= maxValue)

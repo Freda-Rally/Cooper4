@@ -17,14 +17,13 @@
         <div style="position: absolute; left : 5%; bottom: 20%; font-size: 30px; color: white;">COOPER4</div>
         <div style="position: absolute; right : 15px; bottom: 50%;" id="timeDiv"></div>
         <div style="position: absolute; right : 15px; bottom: 10%;">
-            当前用户:<a href="javascript:void(0)" th:text="${session.SYSTEM_USER_INFO_VO_KEY.userName}"></a>.&nbsp;&nbsp;&nbsp;
-            <a href="javascript:void(0)" onclick="">修改密码</a>&nbsp;&nbsp;||&nbsp;
-            <a href="javascript:void(0)" onclick="">退出</a><br/>
-            <div id="sysChooseComboDiv"></div>
+            用户:<a href="javascript:void(0)" th:text="${session.SYSTEM_USER_INFO_VO_KEY.userName}"></a>.&nbsp;&nbsp;&nbsp;
+            <a href="javascript:void(0)" id="changePwdBtn" th:text="个人设置" />&nbsp;&nbsp;||&nbsp;
+            <a href="javascript:void(0)" id="logoutBin" th:text="退出" /><br/>
         </div>
     </div>
     <div id="south" align="right">
-        Cooper4 pro by Freda -- Rally
+        Cooper4 Pro Coding by Rally(Freda-Team)
     </div>
     <script type="text/javascript">
         //请求Main页面JS..
@@ -33,8 +32,18 @@
         ]);
         //创建Main页面JS..
         Ext.onReady(function(){
+            //将code的值放入Cooper4工具类中.
+            //暂时想不到好的办法将数据字典传到前台..只好使用笨办法..
+            Cooper4.SYSTEM_CODE = Ext.JSON.decode(Ext.get('codeHidden').getValue());
+
             Ext.create('Cooper4.plugins.core.main.Index',{});
         });
+        //时间
+        setInterval(function(){
+            document.getElementById("timeDiv").innerHTML = Cooper4.currentTime(new Date())
+        },1000);
     </script>
+
+    <input type="hidden" id="codeHidden" th:value="${CodeCache}" />
 </body>
 </html>

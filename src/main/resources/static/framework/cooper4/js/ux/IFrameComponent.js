@@ -14,8 +14,8 @@ Ext.define('Cooper4.ux.IFrameComponent' ,{
     renderTpl : '<iframe src="{url}" id="{id}-iframeEl" frameBorder="0" width="100%" height="100%" data-ref="iframeEl"></iframe>',
     childEls : ['iframeEl'],
     initComponent : function(){
+        Ext.getBody().mask('数据加载中..请稍后..');
         this.callParent();
-        //Ext.getBody().mask(this.loadMask);
     },
     initEvents : function(){
         this.callParent();

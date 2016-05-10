@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admin.setting.Organization">
+
+    <!-- 人员查询 -->
+    <select id="userList4Page" parameterType="dto" resultType="dto">
+        SELECT
+            _COOPER4_USER._USERID AS userId,
+            _COOPER4_USER._USERNAME AS userName,
+            _COOPER4_USER._ACCOUNT AS account,
+            _COOPER4_USER._LOCKED AS locked,
+            _COOPER4_USER._STATUS AS status,
+            _COOPER4_USER._USERTYPE AS userType,
+            _COOPER4_USER._DESC AS userDesc
+        FROM _COOPER4_USER
+        WHERE
+            _COOPER4_USER._DEPTID = #{deptId}
+            <if test="queryContent !=null and queryContent != ''">
+                AND _COOPER4_USER._USERNAME LIKE '%${queryContent}%'
+            </if>
+        ORDER BY _COOPER4_USER._USERID ASC
+    </select>
+
+    <select id="loadUser" parameterType="dto" resultType="dto">
+         SELECT
+            _COOPER4_USER._USERID AS userId,
+            _COOPER4_USER._USERNAME AS userName,
+            _COOPER4_USER._ACCOUNT AS account,
+            _COOPER4_USER._LOCKED AS locked,
+            _COOPER4_USER._STATUS AS status,
+            _COOPER4_USER._USERTYPE AS userType,
+            _COOPER4_USER._DESC AS userDesc,
+            _COOPER4_USERINFO._SEX AS userSex,
+            _COOPER4_USERINFO._TEL AS userTel,
+            _COOPER4_USERINFO._PHOTO AS userPhoto
+        FROM _COOPER4_USER
+        LEFT JOIN _COOPER4_USERINFO ON _COOPER4_USERINFO._USERID = _COOPER4_USER._USERID
+        WHERE
+            _COOPER4_USER._USERID = #{userId}
+    </select>
+
+    <!-- 人员新增 -->
+    <insert id="userAdd" parameterType="dto">
+        INSERT INTO _COOPER4_USER(
+            _COOPER4_USER._USERID,
+            _COOPER4_USER._USERNAME,
+            _COOPER4_USER._ACCOUNT,
+            _COOPER4_USER._PASSWORD,
+            _COOPER4_USER._LOCKED,
+            _COOPER4_USER._STATUS,
+            _COOPER4_USER._USERTYPE,
+            _COOPER4_USER._CREATETIME,
+            _COOPER4_USER._DESC
+        )VALUES(#{userId},#{userName},#{account},#{passWord},#{locked},#{status},#{userType},NOW(),#{userDesc})
+    </insert>
+
+    <!-- 账号唯一性 -->
+    <select id="isAccountUsed" parameterType="dto" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM _COOPER4_USER
+        WHERE
+            _COOPER4_USER._ACCOUNT = #{account}
+    </select>
+
+    <!-- 增加用户附加信息 -->
+    <insert id="userInfoAdd" parameterType="dto">
+        INSERT INTO _COOPER4_USERINFO(
+            _COOPER4_USERINFO._USERID,
+            _COOPER4_USERINFO._SEX,
+            _COOPER4_USERINFO._TEL,
+            _COOPER4_USERINFO._PHOTO
+        )VALUES(#{userId},#{userSex},#{userTel},#{userPhoto})
+    </insert>
+
+    <!-- 人员信息修改 -->
+    <update id="userEdit" parameterType="dto">
+        UPDATE _COOPER4_USER SET
+            _COOPER4_USER._USERNAME = #{userName},
+            _COOPER4_USER._ACCOUNT = #{account},
+            <if test="passWord != null and passWord != ''">
+                _COOPER4_USER._PASSWORD = #{passWord},
+            </if>
+            _COOPER4_USER._LOCKED = #{locked},
+            _COOPER4_USER._STATUS = #{status},
+            _COOPER4_USER._USERTYPE = #{userType},
+            _COOPER4_USER._DESC = #{userDesc}
+        WHERE
+            _COOPER4_USER._USERID = #{userId}
+            AND _COOPER4_USER._USERTYPE != 1
+    </update>
+
+    <update id="userInfoEdit" parameterType="dto">
+        UPDATE _COOPER4_USERINFO SET
+            _COOPER4_USERINFO._SEX = #{userSex},
+            _COOPER4_USERINFO._TEL = #{userTel},
+            _COOPER4_USERINFO._PHOTO = #{userPhoto}
+        WHERE
+            _COOPER4_USERINFO._USERID = #{userId}
+    </update>
+
+    <!-- 人员删除 -->
+    <delete id="userDelete" parameterType="dto">
+        DELETE FROM _COOPER4_USER WHERE _COOPER4_USER._USERID = #{userId}
+    </delete>
+
+    <delete id="userInfoDelete" parameterType="dto">
+        DELETE FROM _COOPER4_USERINFO WHERE _COOPER4_USERINFO._USERID = #{userId}
+    </delete>
+
+    <!-- =================================================================== -->
+
+    <!-- 部门查询 -->
+    <select id="deptList4Page" parameterType="dto" resultType="dto">
+        SELECT
+            D1._DEPTID AS deptId,
+            D1._DEPTNAME AS deptName,
+            D1._DESC AS deptDesc,
+            D1._PARENTID AS deptParentId,
+            D2._DEPTNAME AS parentName,
+            D1._LEAF AS deptLeaf,
+            D1._CUSTOMID AS customId,
+            D1._SORTNO AS sortNo,
+            D1._STATUS AS status,
+            D1._CREATETIME AS createTime
+        FROM _COOPER4_DEPT D1
+        JOIN _COOPER4_DEPT D2 ON D2._DEPTID = D1._PARENTID
+        WHERE
+            (D1._DEPTID = #{parentId} OR D1._PARENTID = #{parentId})
+            <if test="queryContent != null and queryContent != ''">
+                AND D1._DEPTNAME LIKE '%${queryContent}%'
+            </if>
+    </select>
+
+    <!-- 部门新增 -->
+    <insert id="deptAdd" parameterType="dto">
+        INSERT INTO _COOPER4_DEPT(
+            _COOPER4_DEPT._DEPTID,
+            _COOPER4_DEPT._DEPTNAME,
+            _COOPER4_DEPT._DESC,
+            _COOPER4_DEPT._PARENTID,
+            _COOPER4_DEPT._LEAF,
+            _COOPER4_DEPT._CUSTOMID,
+            _COOPER4_DEPT._SORTNO,
+            _COOPER4_DEPT._STATUS,
+            _COOPER4_DEPT._CREATETIME
+        )VALUES(#{deptId},#{deptName},#{deptDesc},#{deptParentId},1,#{customId},#{sortNo},#{status},NOW())
+    </insert>
+
+    <!-- 部门信息修改 -->
+    <update id="deptEdit" parameterType="dto">
+        UPDATE _COOPER4_DEPT SET
+            _COOPER4_DEPT._DEPTNAME = #{deptName},
+            _COOPER4_DEPT._DESC = #{deptDesc},
+            _COOPER4_DEPT._STATUS = #{status},
+            _COOPER4_DEPT._SORTNO = #{sortNo}
+        WHERE
+            _COOPER4_DEPT._DEPTID = #{deptId}
+    </update>
+
+    <!-- 部门删除 -->
+    <delete id="deptDelete" parameterType="dto">
+        DELETE FROM _COOPER4_DEPT WHERE _COOPER4_DEPT._DEPTID = #{deptId} AND _COOPER4_DEPT._LEAF = 1
+    </delete>
+
+    <!-- 查询部门下用户ID -->
+    <select id="getUsersByDept" parameterType="dto">
+        SELECT
+        _COOPER4_USER._USERID AS userId
+        FROM _COOPER4_USER
+        WHERE
+        _COOPER4_USER._DEPTID = #{deptId}
+    </select>
+
+    <delete id="userDeleteByDept" parameterType="dto">
+        DELETE FROM _COOPER4_USER WHERE _COOPER4_USER._DEPTID = #{deptId}
+    </delete>
+
+    <select id="getDeptSubCount" parameterType="dto" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM _COOPER4_DEPT
+        WHERE
+            _COOPER4_DEPT._PARENTID = #{parentId}
+    </select>
+
+    <!-- 修改父节点类型 -->
+    <update id="deptLeafEdit" parameterType="dto" >
+        UPDATE _COOPER4_DEPT SET
+            _COOPER4_DEPT._LEAF = #{leaf}
+        WHERE
+            _COOPER4_DEPT._DEPTID = #{parentId}
+    </update>
+
+    <!-- =================================================================== -->
+
+    <!-- 角色查询 -->
+    <select id="roleList4Page" parameterType="dto" resultType="dto">
+        SELECT
+            _COOPER4_ROLE._ROLEID AS roleId,
+            _COOPER4_ROLE._ROLENAME AS roleName,
+            _COOPER4_ROLE._ROLETYPE AS roleType,
+            _COOPER4_ROLE._EDITMODE AS editMode,
+            _COOPER4_ROLE._STATUS AS status,
+            _COOPER4_ROLE._DESC AS roleDesc,
+            _COOPER4_ROLE._CREATETIME AS createTime
+        FROM _COOPER4_ROLE
+        WHERE
+            <if test="queryContent != null and queryContent = ''">
+                _COOPER4_ROLE._ROLENAME LIKE '%${queryContent}%'
+            </if>
+    </select>
+
+    <!-- 角色新增 -->
+    <insert id="roleAdd" parameterType="dto">
+        INSERT INTO _COOPER4_ROLE(
+            _COOPER4_ROLE._ROLEID,
+            _COOPER4_ROLE._ROLENAME,
+            _COOPER4_ROLE._ROLETYPE,
+            _COOPER4_ROLE._EDITMODE,
+            _COOPER4_ROLE._STATUS,
+            _COOPER4_ROLE._DESC,
+            _COOPER4_ROLE._CREATETIME
+        )VALUES(#{roleId},#{roleName},#{roleType},1,#{status},#{roleDesc},NOW())
+    </insert>
+
+    <!-- 角色信息修改 -->
+    <update id="roleEdit" parameterType="dto">
+        UPDATE _COOPER4_ROLE SET
+            _COOPER4_ROLE._ROLENAME = #{roleName},
+            _COOPER4_ROLE._ROLETYPE = #{roleType},
+            _COOPER4_ROLE._STATUS = #{status},
+            _COOPER4_ROLE._DESC = #{roleDesc}
+        WHERE
+            _COOPER4_ROLE._ROLEID = #{roleId}
+    </update>
+
+    <!-- 角色删除 -->
+    <delete id="roleDelete" parameterType="dto">
+        DELETE FROM _COOPER4_ROLE WHERE _COOPER4_ROLE._ROLEID = #{roleId} AND _COOPER4_ROLE._EDITMODE = 1
+    </delete>
+</mapper>

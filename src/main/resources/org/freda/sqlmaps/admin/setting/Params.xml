@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admin.setting.Params">
+
+    <!-- 为初始化查询全部 -->
+    <select id="queryAll4Init" resultType="dto">
+        SELECT
+            _COOPER4_PARAM._KEY AS pKey,
+            _COOPER4_PARAM._VALUE AS pValue,
+            _COOPER4_PARAM._DESC AS pDesc
+        FROM _COOPER4_PARAM
+        WHERE
+            _COOPER4_PARAM._STATUS = 1
+        ORDER BY _COOPER4_PARAM._PARAMID ASC
+    </select>
+
+    <!-- 管理查询用 -->
+    <select id="query4Page" parameterType="dto" resultType="dto">
+        SELECT
+            _COOPER4_PARAM._PARAMID AS paramId,
+            _COOPER4_PARAM._KEY AS pKey,
+            _COOPER4_PARAM._VALUE AS pValue,
+            _COOPER4_PARAM._STATUS AS status,
+            _COOPER4_PARAM._EDITMODE AS editMode,
+            _COOPER4_PARAM._DESC AS pDesc
+        FROM _COOPER4_PARAM
+        WHERE
+            1=1
+            <if test="queryContent != null and queryContent != ''">
+                AND _COOPER4_PARAM._KEY LIKE '%#{queryContent}%'
+            </if>
+        ORDER BY _COOPER4_PARAM._PARAMID ASC
+    </select>
+
+    <!-- 添加 -->
+    <insert id="add" parameterType="dto">
+        INSERT INTO _COOPER4_PARAM(
+            _COOPER4_PARAM._PARAMID,
+            _COOPER4_PARAM._KEY,
+            _COOPER4_PARAM._VALUE,
+            _COOPER4_PARAM._STATUS,
+            _COOPER4_PARAM._EDITMODE,
+            _COOPER4_PARAM._DESC
+        )VALUES (#{paramId},#{pKey},#{pValue},{status},1,#{pDesc})
+    </insert>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="dto">
+        UPDATE _COOPER4_PARAM SET
+            _COOPER4_PARAM._KEY = #{pKey},
+            _COOPER4_PARAM._VALUE = #{pValue},
+            _COOPER4_PARAM._STATUS = #{status},
+            _COOPER4_PARAM._DESC = #{pDesc}
+        WHERE
+            _COOPER4_PARAM._PARAMID = #{paramId} AND _COOPER4_PARAM._EDITMODE = 1
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="dto">
+        DELETE FROM _COOPER4_PARAM
+        WHERE
+          _COOPER4_PARAM._PARAMID = #{paramId} AND _COOPER4_PARAM._EDITMODE = 1
+    </delete>
+
+</mapper>

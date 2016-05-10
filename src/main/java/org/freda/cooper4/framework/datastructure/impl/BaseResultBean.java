@@ -235,7 +235,7 @@ public class BaseResultBean implements ResultBean4Page
     {
         if(this.getTotalCount() >= 0)
         {
-            return JsonHelper.encodeList2PageJson(this.getData(), this.getTotalCount(), dFormatString);
+            return JsonHelper.encodeList2PageJson(this.getData(), new Long(this.getTotalCount()), dFormatString);
         }
         else
         {

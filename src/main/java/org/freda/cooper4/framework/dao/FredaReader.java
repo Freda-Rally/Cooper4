@@ -1,5 +1,6 @@
 package org.freda.cooper4.framework.dao;
 
+import com.github.pagehelper.Page;
 import org.freda.cooper4.framework.datastructure.Dto;
 import org.freda.cooper4.framework.datastructure.ResultBean4Page;
 
@@ -58,18 +59,17 @@ public interface FredaReader
      *            查询条件对象(map javaBean)
      */
     @SuppressWarnings("rawtypes")
-    public List queryForPage(String statementName, Dto qDto)
+    public Page queryForPage(String statementName, Dto qDto)
             throws SQLException;
 
     /**
-     * JSP分页查询
+     * 分页查询
      * @param statementName 结果SQL语句ID号
-     * @param statementCountName 结果COUNT SQL语句ID号
      * @param qDto 查询条件对象(map javaBean)
      * @return ResultBean4Page
      * @throws SQLException
      */
-    public ResultBean4Page queryForPage(String statementName, String statementCountName, Dto qDto)throws SQLException;
+    public ResultBean4Page queryForPage2(String statementName, Dto qDto)throws SQLException;
 
     /**
      * 获取Connection对象<br>
