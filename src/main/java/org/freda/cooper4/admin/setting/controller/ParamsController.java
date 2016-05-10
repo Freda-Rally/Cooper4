@@ -34,7 +34,7 @@ public class ParamsController extends Cooper4AdminBaseController
     @RequestMapping("/list4Page")
     public String list4Page(HttpServletRequest request,HttpServletResponse response) throws Exception
     {
-        Page page = (Page)cooper4Reader.queryForPage("admin.setting.Params.list4Page",super.getParamsAsDto(request));
+        Page page = cooper4Reader.queryForPage("admin.setting.Params.list4Page",super.getParamsAsDto(request));
 
         super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal()),response);
 

@@ -15,15 +15,17 @@
     <script type="text/javascript" th:src="@{/framework/cooper4/js/Commons.js}"></script>
 </head>
 <body>
+    <input type="hidden" id="pluginClassName" th:value="${SYSTEM_TAB_JS_CLS}"/>
     <script type="text/javascript">
+        var pluginClassName = Ext.get('pluginClassName').getValue();
         //请求Tab页面JS..
         Ext.require([
-            'Cooper4.plugins.setting.code.Index'
+            pluginClassName
         ]);
         //创建Tab页面JS..
         Ext.onReady(function(){
             Cooper4.SYSTEM_CODE = me.Cooper4.SYSTEM_CODE;
-            Ext.create('Cooper4.plugins.setting.code.Index',{});
+            Ext.create(pluginClassName,{});
             parent.window.Ext.getBody().unmask();
         });
     </script>

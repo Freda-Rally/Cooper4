@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.freda.cooper4.admin.setting.service.CodeManagerService;
 import org.freda.cooper4.common.generator.dbid.Cooper4DBIdHelper;
 import org.freda.cooper4.common.service.CodeInitService;
+import org.freda.cooper4.common.service.CodeLoadService;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseServiceImpl;
 import org.freda.cooper4.common.utils.CommonContainer;
 import org.freda.cooper4.framework.datastructure.Dto;
@@ -22,7 +23,8 @@ import java.util.List;
  * Created by rally on 16/5/4.
  */
 @Service
-public class CodeServiceImpl extends Cooper4AdminBaseServiceImpl implements CodeManagerService,CodeInitService, org.freda.cooper4.common.service.CodeLoadService {
+public class CodeServiceImpl extends Cooper4AdminBaseServiceImpl implements CodeManagerService,CodeInitService, CodeLoadService
+{
 
     private static final Log log = LogFactory.getLog(CodeServiceImpl.class);
 

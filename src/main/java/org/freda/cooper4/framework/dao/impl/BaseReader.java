@@ -75,7 +75,7 @@ public abstract class BaseReader extends SqlSessionDaoSupport implements FredaRe
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public List queryForPage(String statementName, Dto qDto) throws SQLException
+    public Page queryForPage(String statementName, Dto qDto) throws SQLException
     {
         String start = qDto.getAsString("start");
         String limit = qDto.getAsString("limit");
@@ -108,7 +108,7 @@ public abstract class BaseReader extends SqlSessionDaoSupport implements FredaRe
 
         //PageHelper.startPage(intStart,end);
 
-        return super.getSqlSession().selectList(statementName, qDto, new RowBounds(intStart.intValue(), end.intValue()));
+        return (Page)super.getSqlSession().selectList(statementName, qDto, new RowBounds(intStart.intValue(), end.intValue()));
     }
     /**
      * 分页查询 不使用分页插件.
