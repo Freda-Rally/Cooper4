@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admin.setting.Session">
+
+    <parameterMap id="userInfo" type="org.freda.cooper4.common.vo.UserInfoVo">
+        <parameter property="userId" resultMap="_USERID" />
+        <parameter property="userName" resultMap="_USERNAME" />
+        <parameter property="account" resultMap="_ACCOUNT" />
+        <parameter property="sessionId" resultMap="_SESSIONID" />
+        <parameter property="explorerType" resultMap="_EXPLORER" />
+        <parameter property="ipAddr" resultMap="_LOGINIP" />
+    </parameterMap>
+
+    <!-- 添加 -->
+    <insert id="add" parameterMap="userInfo">
+        INSERT INTO _COOPER4_SESSION(
+            _COOPER4_SESSION._USERID,
+            _COOPER4_SESSION._USERNAME,
+            _COOPER4_SESSION._ACCOUNT,
+            _COOPER4_SESSION._SESSIONID,
+            _COOPER4_SESSION._EXPLORER,
+            _COOPER4_SESSION._LOGINIP,
+            _COOPER4_SESSION._CREATETIME
+        )VALUES(#{userId},#{userName},#{account},#{sessionId},#{explorerType},#{ipAddr},NOW())
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="delete" parameterMap="userInfo">
+        DELETE FROM _COOPER4_SESSION WHERE _COOPER4_SESSION._SESSIONID = #{sessionId}
+    </delete>
+
+</mapper>

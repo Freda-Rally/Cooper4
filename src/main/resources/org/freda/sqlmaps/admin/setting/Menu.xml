@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admin.setting.Menu">
+
+    <!-- 查询 -->
+    <select id="list4Page" parameterType="dto" resultType="dto">
+
+    </select>
+
+    <!-- 添加 -->
+    <insert id="add" parameterType="dto">
+
+    </insert>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="dto">
+
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="dto">
+
+    </delete>
+
+    <!-- 修改Leaf -->
+    <update id="editMenuLeaf" parameterType="dto">
+
+    </update>
+
+</mapper>

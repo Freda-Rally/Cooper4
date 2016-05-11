@@ -1,6 +1,7 @@
 package org.freda.cooper4.admin.setting.service.impl;
 
 import org.freda.cooper4.admin.setting.service.Authority4OrganizationService;
+import org.freda.cooper4.admin.setting.service.DeptTreeService;
 import org.freda.cooper4.admin.setting.service.OrganizationService;
 import org.freda.cooper4.common.generator.dbid.Cooper4DBIdHelper;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseServiceImpl;
@@ -19,7 +20,7 @@ import java.util.List;
  * Created by rally on 16/5/8.
  */
 @Service
-public class OrganizationServiceImpl extends Cooper4AdminBaseServiceImpl implements OrganizationService
+public class OrganizationServiceImpl extends Cooper4AdminBaseServiceImpl implements OrganizationService,DeptTreeService
 {
     @Resource
     private Authority4OrganizationService authority4OrganizationService;
@@ -175,5 +176,17 @@ public class OrganizationServiceImpl extends Cooper4AdminBaseServiceImpl impleme
 
             authority4OrganizationService.delete4RoleRm(pDto);
         }
+    }
+
+    /**
+     * 部门树.
+     *
+     * @param pDto
+     * @return
+     */
+    @Override
+    public List treeInit(Dto pDto)
+    {
+        return super.getDao().queryForList("admin.setting.Organization.deptTreeInit",pDto);
     }
 }

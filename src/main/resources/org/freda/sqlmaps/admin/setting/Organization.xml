@@ -239,4 +239,19 @@
     <delete id="roleDelete" parameterType="dto">
         DELETE FROM _COOPER4_ROLE WHERE _COOPER4_ROLE._ROLEID = #{roleId} AND _COOPER4_ROLE._EDITMODE = 1
     </delete>
+
+    <!-- 部门树 -->
+    <select id="deptTreeInit" parameterType="dto" resultType="dto">
+        SELECT
+            CONCAT('dept_',_COOPER4_DEPT._DEPTID) AS id,
+            _COOPER4_DEPT._DEPTNAME AS text,
+            CONCAT('dept_',_COOPER4_DEPT._PARENTID) AS parentId,
+            _COOPER4_DEPT._LEAF AS leaf,
+            '' AS iconCls
+        FROM _COOPER4_DEPT
+        WHERE
+            _COOPER4_DEPT._PARENTID = #{node}
+            AND _COOPER4_DEPT._STATUS = 1
+        ORDER BY _COOPER4_DEPT._SORTNO,_COOPER4_DEPT._DEPTID ASC
+    </select>
 </mapper>
