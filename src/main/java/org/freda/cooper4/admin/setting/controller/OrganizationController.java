@@ -211,7 +211,7 @@ public class OrganizationController extends Cooper4AdminBaseController
     {
         Page page = cooper4Reader.queryForPage("admin.setting.Organization.roleList4Page",super.getParamsAsDto(request));
 
-        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal()),response);
+        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal(),SystemContainer.DATE_TIME_FORMART[0]),response);
 
         return null;
     }

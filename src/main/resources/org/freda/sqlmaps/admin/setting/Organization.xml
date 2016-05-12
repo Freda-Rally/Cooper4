@@ -206,7 +206,7 @@
             _COOPER4_ROLE._CREATETIME AS createTime
         FROM _COOPER4_ROLE
         WHERE
-            <if test="queryContent != null and queryContent = ''">
+            <if test="queryContent != null and queryContent == ''">
                 _COOPER4_ROLE._ROLENAME LIKE '%${queryContent}%'
             </if>
     </select>
