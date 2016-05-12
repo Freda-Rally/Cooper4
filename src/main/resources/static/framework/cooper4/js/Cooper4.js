@@ -21,6 +21,8 @@ var Cooper4 = Cooper4 || {};
 
     Cooper4.SUBMIT_MODE_ADD  =  "add";
 
+    Cooper4.GLOBAL_PARAMS = {};
+
     Cooper4.apply = function(object, config, defaults) {
         if (defaults) {
             Cooper4.apply(object, defaults);

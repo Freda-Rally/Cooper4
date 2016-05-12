@@ -1,10 +1,10 @@
 /**
  *
- * 添加修改时用的window
+ * 添加或编辑窗口
  *
- * Created by rally on 16/5/5.
+ * Created by rally on 16/5/11.
  */
-Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
+Ext.define('Cooper4.plugins.setting.menu.AddOrEditWin',{
 
     extend: 'Ext.window.Window',
 
@@ -16,11 +16,11 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
 
             ayout : 'fit',
             width : 450,
-            height : 255,
+            height : 315,
             resizable : false,
             draggable : true,
             closeAction : 'hide',
-            title : '<span>数据字典信息</span>',
+            title : '<span>菜单信息</span>',
             modal : true,
             collapsible : true,
             titleCollapse : true,
@@ -34,8 +34,8 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
             constrain : true,
 
             items : [Ext.create('Ext.form.Panel',{
-                id : 'codeFormPanel',
-                name : 'codeFormPanel',
+                id : 'menuFormPanel',
+                name : 'menuFormPanel',
                 labelAlign : 'right',
                 labelWidth : 110,
                 frame : false,
@@ -46,43 +46,62 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
                 },
                 defaultType: 'textfield',
                 items: [{
-                    fieldLabel : '字典集合名称*',
+                    fieldLabel : '父级别菜单',
                     blankText : '请勿填空值..',
-                    name : 'fieldId',
-                    id : 'fieldId',
-                    allowBlank : false
-                },{
-                    fieldLabel : '描述',
-                    blankText : '请勿填空值..',
-                    name : 'fieldName',
-                    id : 'fieldName'
+                    name : 'parentName',
+                    id : 'parentName',
+                    allowBlank : false,
+                    disabled : true
                 },{
                     fieldLabel : '名称',
                     blankText : '请勿填空值..',
-                    name : 'codeDesc',
-                    id : 'codeDesc',
-                    allowBlank : false
+                    name : 'menuName',
+                    id : 'menuName'
                 },{
-                    fieldLabel : '值',
+                    fieldLabel : '请求地址',
                     blankText : '请勿填空值..',
-                    name : 'code',
-                    id : 'code',
-                    xtype : 'numberfield',
-                    maxValue: 99,
-                    minValue: 0,
-                    step: 1,
+                    name : 'menuRequest',
+                    id : 'menuRequest',
                     allowBlank : false
                 },{
-                    fieldLabel : '排序号',
+                    fieldLabel : '配序号',
                     blankText : '请勿填空值..',
                     name : 'sortNo',
                     id : 'sortNo',
                     xtype : 'numberfield',
                     maxValue: 99,
                     minValue: 0,
+                    value: 0,
                     step: 1,
-                    value:0,
                     allowBlank : false
+                },{
+                    fieldLabel : '图标CSS类',
+                    blankText : '请勿填空值..',
+                    name : 'iconCls',
+                    id : 'iconCls',
+                    allowBlank : false
+                },{
+                    fieldLabel : '描述',
+                    blankText : '请勿填空值..',
+                    name : 'menuDesc',
+                    id : 'menuDesc',
+                    allowBlank : false
+                },{
+                    xtype : 'combo',
+                    fieldLabel : '类型',
+                    id : 'menuType',
+                    name : 'menuType',
+                    editable : false,
+                    triggerAction : 'all',
+                    queryMode: 'local',
+                    allowBlank : false,
+                    blankText : '请勿填控制.',
+                    store : Ext.create('Ext.data.Store',{
+                        fields: ['name', 'code'],
+                        data : Cooper4.getCodeArray('MENUTYPE')
+                    }),
+                    displayField: 'name',
+                    valueField: 'code'
                 },{
                     xtype : 'combo',
                     fieldLabel : '状态',
@@ -101,8 +120,12 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
                     valueField: 'code'
                 },{
                     xtype : 'hiddenfield',
-                    id : 'codeId',
-                    name : 'codeId'
+                    id : 'menuId',
+                    name : 'menuId'
+                },{
+                    xtype : 'hiddenfield',
+                    id : 'parentId',
+                    name : 'parentId'
                 },{
                     xtype : 'hiddenfield',
                     id : 'submitMode',
@@ -131,7 +154,7 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
      */
     onSaveBtnClick : function(){
 
-        this.fireEvent('eventSave',this,Ext.getCmp('codeFormPanel'));
+        this.fireEvent('eventSave',this,Ext.getCmp('menuFormPanel'));
     },
     /**
      * 点击关闭

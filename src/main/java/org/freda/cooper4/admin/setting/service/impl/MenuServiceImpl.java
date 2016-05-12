@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  *
@@ -33,6 +34,8 @@ public class MenuServiceImpl extends Cooper4AdminBaseServiceImpl implements Menu
     public void add(Dto pDto)
     {
         pDto.put("menuId", Cooper4DBIdHelper.getDbTableID("MENUID"));
+
+        pDto.put("leaf" , 0);
 
         super.getDao().insert("admin.setting.Menu.add",pDto);
 
@@ -60,15 +63,27 @@ public class MenuServiceImpl extends Cooper4AdminBaseServiceImpl implements Menu
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(Dto pDto)
     {
-        String[] ids = pDto.getAsString("ids").split(",");
-
-        for (String id : ids)
+        if (((Integer)super.getDao().queryForObject("admin.setting.Menu.isLastSub",pDto)) <= 1)
         {
-            pDto.put("menuId",id);
+            pDto.put("leaf",1);
 
-            super.getDao().delete("admin.setting.Menu.delete",pDto);
-
-            authority4OrganizationService.delete4MenuRm(pDto);
+            super.getDao().update("admin.setting.Menu.editMenuLeaf",pDto);
         }
+        super.getDao().delete("admin.setting.Menu.delete",pDto);
+
+        authority4OrganizationService.delete4MenuRm(pDto);
+
+    }
+
+    /**
+     * 树
+     *
+     * @param pDto
+     * @return
+     */
+    @Override
+    public List<?> menuTreeInit(Dto pDto)
+    {
+        return super.getDao().queryForList("admin.setting.Menu.menuTreeInit",pDto);
     }
 }

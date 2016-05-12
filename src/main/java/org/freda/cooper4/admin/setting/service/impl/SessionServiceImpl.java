@@ -26,7 +26,7 @@ public class SessionServiceImpl extends Cooper4AdminBaseServiceImpl implements S
     @Override
     public void kill(Dto pDto)
     {
-        super.getDao().delete("",pDto);
+        super.getDao().delete("admin.setting.Session.delete",pDto);
     }
 
     /**
@@ -37,7 +37,7 @@ public class SessionServiceImpl extends Cooper4AdminBaseServiceImpl implements S
     @Override
     public void add4Monitor(UserInfoVo userInfoVo)
     {
-        super.getDao().insert("",userInfoVo);
+        super.getDao().insert("admin.setting.Session.add",userInfoVo);
     }
 
     /**
@@ -48,6 +48,6 @@ public class SessionServiceImpl extends Cooper4AdminBaseServiceImpl implements S
     @Override
     public void del4Monitor(UserInfoVo userInfoVo)
     {
-        super.getDao().delete("",userInfoVo);
+        super.getDao().delete("admin.setting.Session.delete",userInfoVo);
     }
 }

@@ -148,6 +148,8 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
 
         if (FredaUtils.isEmpty(data))//末级部门查询用户.
         {
+            pDto.put("node",pDto.getAsString("node").split("_")[1]);
+
             data = this.setListChecked(super.getDao().queryForList("admin.setting.Authority.listUserWithRole",pDto),"roleId");
         }
         else

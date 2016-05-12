@@ -3,7 +3,7 @@
 <mapper namespace="admin.setting.Session">
 
     <parameterMap id="userInfo" type="org.freda.cooper4.common.vo.UserInfoVo">
-        <parameter property="userId" resultMap="_USERID" />
+        <parameter property="userId" resultMap="_USERID"/>
         <parameter property="userName" resultMap="_USERNAME" />
         <parameter property="account" resultMap="_ACCOUNT" />
         <parameter property="sessionId" resultMap="_SESSIONID" />

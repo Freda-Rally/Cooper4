@@ -2,6 +2,8 @@ package org.freda.cooper4.admin.setting.service;
 
 import org.freda.cooper4.framework.datastructure.Dto;
 
+import java.util.List;
+
 /**
  *
  * 菜单资源管理.
@@ -30,4 +32,11 @@ public interface MenuManagerService
      * @param pDto
      */
     public abstract void delete(Dto pDto);
+
+    /**
+     * 树
+     * @param pDto
+     * @return
+     */
+    public abstract List<?> menuTreeInit(Dto pDto);
 }

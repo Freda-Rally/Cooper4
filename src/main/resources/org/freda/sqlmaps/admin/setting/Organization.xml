@@ -250,7 +250,7 @@
             '' AS iconCls
         FROM _COOPER4_DEPT
         WHERE
-            _COOPER4_DEPT._PARENTID = #{node}
+            CONCAT('dept_',_COOPER4_DEPT._PARENTID) = #{node}
             AND _COOPER4_DEPT._STATUS = 1
         ORDER BY _COOPER4_DEPT._SORTNO,_COOPER4_DEPT._DEPTID ASC
     </select>

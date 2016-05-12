@@ -116,7 +116,7 @@ public class OrganizationServiceImpl extends Cooper4AdminBaseServiceImpl impleme
     {
         List userList = super.getDao().queryForList("admin.setting.Organization.getUsersByDept",pDto);
 
-        if (((Integer)super.getDao().queryForObject("admin.setting.Organization.getDeptSubCount",pDto)) > 1)
+        if (((Integer)super.getDao().queryForObject("admin.setting.Organization.getDeptSubCount",pDto)) <= 1)
         {
             pDto.put("leaf",1);
 

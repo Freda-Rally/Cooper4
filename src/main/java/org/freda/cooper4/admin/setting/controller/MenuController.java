@@ -38,7 +38,7 @@ public class MenuController extends Cooper4AdminBaseController
     {
         Page page = cooper4Reader.queryForPage("admin.setting.Menu.list4Page",super.getParamsAsDto(request));
 
-        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal()),response);
+        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal(),SystemContainer.DATE_TIME_FORMART[0]),response);
 
         return null;
     }
@@ -93,6 +93,21 @@ public class MenuController extends Cooper4AdminBaseController
         menuManagerService.delete(super.getParamsAsDto(request));
 
         super.setOkTipMsg(SystemContainer.TIPS_SUCCESS_MSG,response);
+
+        return null;
+    }
+
+    /**
+     * 树
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/menuTreeInit")
+    public String menuTreeInit(HttpServletRequest request,HttpServletResponse response) throws Exception
+    {
+        super.write(JsonHelper.encodeObject2Json(menuManagerService.menuTreeInit(super.getParamsAsDto(request))),response);
 
         return null;
     }

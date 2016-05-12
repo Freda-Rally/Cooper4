@@ -97,7 +97,7 @@
         FROM _COOPER4_MENU
         LEFT JOIN _COOPER4_ROLE_MENU ON _COOPER4_ROLE_MENU._MENUID = _COOPER4_MENU._MENUID
         WHERE
-            _COOPER4_MENU._PARENTID = #{node}
+            _COOPER4_MENU._PARENTID = 'menu_${node}'
             AND _COOPER4_MENU._STATUS = 1
             <if test="roleType == 2">
                 AND _COOPER4_MENU._MENUTYPE = 2
