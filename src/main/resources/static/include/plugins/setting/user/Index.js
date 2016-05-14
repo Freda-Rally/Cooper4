@@ -1,15 +1,14 @@
 /**
+ * 人员管理
  *
- * 菜单管理
- *
- * Created by rally on 16/5/11.
+ * Created by rally on 16/5/13.
  */
-Ext.define('Cooper4.plugins.setting.menu.Index',{
+Ext.define('Cooper4.plugins.setting.user.Index',{
 
-    requires : ['Cooper4.plugins.setting.menu.MenuTreePanel',
-                'Cooper4.plugins.setting.menu.MenuGridPanel',
-                'Cooper4.plugins.setting.menu.AddOrEditWin',
-                'Cooper4.ux.Ajax'],
+    requires : ['Cooper4.plugins.setting.user.DeptTreePanel',
+        'Cooper4.plugins.setting.user.UserGridPanel',
+        'Cooper4.plugins.setting.user.AddOrEditUserWin',
+        'Cooper4.ux.Ajax'],
 
 
     constructor : function(){
@@ -18,7 +17,7 @@ Ext.define('Cooper4.plugins.setting.menu.Index',{
 
         Ext.create('Ext.container.Viewport',{
             layout : 'border',
-            items : [Ext.create('Cooper4.plugins.setting.menu.MenuGridPanel',{
+            items : [Ext.create('Cooper4.plugins.setting.user.UserGridPanel',{
 
                 listeners : [{
                     'eventOnAddBtnClick' : function(grid,mode){
@@ -33,33 +32,33 @@ Ext.define('Cooper4.plugins.setting.menu.Index',{
                 },{
                     'eventOnDeleteBtnClick' : function(grid){
 
-                        that.deleteMenu(grid);
+                        that.deleteUser(grid);
                     }
                 }]
-            }),Ext.create('Cooper4.plugins.setting.menu.MenuTreePanel',{
+            }),Ext.create('Cooper4.plugins.setting.user.DeptTreePanel',{
 
                 listeners : [{
 
-                    'eventTreeItemClick' : function(panel,id,superName){
+                    'eventTreeItemClick' : function(panel,id,superName,leaf){
 
-                        Cooper4.GLOBAL_PARAMS.parentId = id;
+                        if(leaf == 1){
 
-                        Cooper4.GLOBAL_PARAMS.parentName = superName;
+                            Cooper4.GLOBAL_PARAMS.parentId = id;
 
-                        Ext.data.StoreManager.lookup('menuStore').load();
-
+                            Ext.data.StoreManager.lookup('userStore').load();
+                        }
                     }
                 }]
             })]
         });
 
-        that.addOrEditWin = Ext.create('Cooper4.plugins.setting.menu.AddOrEditWin',{
+        that.addOrEditWin = Ext.create('Cooper4.plugins.setting.user.AddOrEditUserWin',{
 
             listeners : {
 
                 'eventSave' : function(win,form){
 
-                    that.addOrEditMenu(form);
+                    that.addOrEditUser(form);
                 }
             }
 
@@ -75,18 +74,21 @@ Ext.define('Cooper4.plugins.setting.menu.Index',{
 
         if(mode == 'add'){
 
-            var record = Ext.getCmp('menuTree').getSelection()[0];
+            var record = Ext.getCmp('deptTree').getSelection()[0];
             if(Ext.isEmpty(record))
             {
-                Cooper4.showAlert('请选择往哪个菜单下添加.');
+                Cooper4.showAlert('请选择往哪个部门下添加.');
                 return ;
             }
-
-            Ext.getCmp('menuFormPanel').getForm().reset();
+            if(record.get('leaf') != 1)
+            {
+                Cooper4.showAlert('用户只能添加至叶子部门.');
+                return ;
+            }
+            Ext.getCmp('userFormPanel').getForm().reset();
             Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_ADD);
-            Ext.getCmp('parentName').setValue(Cooper4.GLOBAL_PARAMS.parentName);
-            Ext.getCmp('parentId').setValue(Cooper4.GLOBAL_PARAMS.parentId);
-
+            Ext.getCmp('deptId').setValue(Cooper4.GLOBAL_PARAMS.parentId);
+            Ext.getCmp('photo').setSrc('/framework/cooper4/img/defaut/photo/default.jpg');
         }else{
 
             var record = grid.getSelectionModel().getSelection();
@@ -100,21 +102,30 @@ Ext.define('Cooper4.plugins.setting.menu.Index',{
                 Cooper4.showAlert("请选择单一项.");
                 return ;
             }
-            if(record[0].get('editMode') == 0){
+            Ext.getCmp('userFormPanel').getForm().load({
 
-                Cooper4.showAlert("只读项目无法修改..");
-                return ;
-            }
-            Ext.getCmp('menuFormPanel').getForm().loadRecord(record[0]);
-            Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_EDIT);
+                url : '/organization/userLoad.freda?userId=' + record[0].get('userId'),
+                success : function(form, action){
+
+                    if(Ext.getCmp('userPhoto').getValue() != null && Ext.getCmp('userPhoto').getValue() != '') {
+
+                        Ext.getCmp('photo').setSrc( Ext.getCmp('userPhoto').getValue());
+                    }else {
+
+                        Ext.getCmp('photo').setSrc('/framework/cooper4/img/defaut/photo/default.jpg');
+                    }
+                    Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_EDIT);
+                }
+            });
         }
+        Ext.getCmp('isUploadPhoto').setValue('0');
         this.addOrEditWin.show();
     },
     /**
      * 提交FORM
      * @param form
      */
-    addOrEditMenu : function(form){
+    addOrEditUser : function(form){
 
         var that = this;
 
@@ -122,11 +133,11 @@ Ext.define('Cooper4.plugins.setting.menu.Index',{
 
         if(Ext.getCmp('submitMode').getValue() == 'add') {
 
-            submitUrl = "/menu/add.freda";
+            submitUrl = "/organization/userAdd.freda";
         }
         else{
 
-            submitUrl = "/menu/edit.freda";
+            submitUrl = "/organization/userEdit.freda";
         }
 
         Ext.Msg.show({
@@ -145,10 +156,7 @@ Ext.define('Cooper4.plugins.setting.menu.Index',{
                         success: function(form, action) {
                             that.addOrEditWin.hide();
                             Cooper4.showAlert(action.result.msg);
-                            Ext.data.StoreManager.lookup('menuStore').reload();
-                            Ext.getCmp('menuTree').store.load({
-                                node : Ext.getCmp('menuTree').getRootNode()
-                            });
+                            Ext.data.StoreManager.lookup('userStore').reload();
                         },
                         failure: function(form, action) {
                             switch (action.failureType) {
@@ -171,23 +179,13 @@ Ext.define('Cooper4.plugins.setting.menu.Index',{
      * 删除菜单.
      * @param grid
      */
-    deleteMenu : function(grid){
+    deleteUser : function(grid){
 
         var record = grid.getSelectionModel().getSelection();
         if(Ext.isEmpty(record))
         {
             Cooper4.showAlert("请选择删除项.");
             return ;
-        }
-        for(var i=0;i<record.length;i++){
-            if(record[i].get('editMode') == 0){
-                Cooper4.showAlert("选择项中含有只读项目.");
-                return ;
-            }
-            if(record[0].get('menuLeaf') != 1){
-                Cooper4.showAlert('系统只允许从末级菜单开始依次删除.');
-                return ;
-            }
         }
 
         Ext.Msg.show({
@@ -198,19 +196,15 @@ Ext.define('Cooper4.plugins.setting.menu.Index',{
             fn: function(btn) {
                 if (btn === 'yes') {
                     Cooper4.ux.Ajax.request({
-                        url : '/menu/delete.freda',
+                        url : '/organization/userDelete.freda',
                         method : 'POST',
                         params : {
-                            menuId : Cooper4.jsArray2JsString(record,'menuId'),
-                            parentId : Cooper4.GLOBAL_PARAMS.parentId
+                            userId : Cooper4.jsArray2JsString(record,'userId')
                         },
                         success: function(response) {
                             var result = Ext.JSON.decode(response.responseText);
                             Cooper4.showAlert(result.msg);
-                            Ext.data.StoreManager.lookup('menuStore').reload();
-                            Ext.getCmp('menuTree').store.load({
-                                node : Ext.getCmp('menuTree').getRootNode()
-                            });
+                            Ext.data.StoreManager.lookup('userStore').reload();
                         }
                     });
                 }

@@ -77,3 +77,7 @@ mongo:
   password:
   database: xx
 
+# Other
+uploadFileRootPath: /tmp/
+filePathUrlHead: www.dd.com/
+

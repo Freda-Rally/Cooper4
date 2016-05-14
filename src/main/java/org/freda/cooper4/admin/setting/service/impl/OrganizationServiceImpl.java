@@ -4,13 +4,19 @@ import org.freda.cooper4.admin.setting.service.Authority4OrganizationService;
 import org.freda.cooper4.admin.setting.service.DeptTreeService;
 import org.freda.cooper4.admin.setting.service.OrganizationService;
 import org.freda.cooper4.common.generator.dbid.Cooper4DBIdHelper;
+import org.freda.cooper4.common.service.FileUpLoadService;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseServiceImpl;
 import org.freda.cooper4.framework.datastructure.Dto;
+import org.freda.cooper4.framework.datastructure.ParamsDto;
+import org.freda.cooper4.framework.utils.CodecUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -24,21 +30,38 @@ public class OrganizationServiceImpl extends Cooper4AdminBaseServiceImpl impleme
 {
     @Resource
     private Authority4OrganizationService authority4OrganizationService;
+
+    @Resource
+    private FileUpLoadService fileUpLoadService;
+
+    private static final String DEFAULT_PASSWORD = "111111";
     /**
      * 人员新增
      * @param pDto
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public boolean userAdd(Dto pDto)
+    public boolean userAdd(Dto pDto) throws IOException
     {
-        pDto.put("userId", Cooper4DBIdHelper.getDbTableID("USERID"));
-
         if (((Integer)super.getDao().queryForObject("admin.setting.Organization.isAccountUsed",pDto)) == 0)
         {
+            if (pDto.getAsInteger("isUploadPhoto") == 1)//如果上传头像.
+            {
+                ParamsDto paramsDto = (ParamsDto)pDto;
+
+                MultipartHttpServletRequest request = paramsDto.getMultipartHttpServletRequest();
+
+                fileUpLoadService.upload((MultipartFile)request.getFile("upLoadFile"),pDto);
+
+                pDto.put("userPhoto",pDto.getAsString("fileId"));
+            }
+            pDto.put("userId", Cooper4DBIdHelper.getDbTableID("USERID"));
+
+            pDto.put("password", CodecUtils.encryptBasedDes(this.DEFAULT_PASSWORD));
+
             super.getDao().insert("admin.setting.Organization.userAdd",pDto);
 
-            super.getDao().insert("admin.setting.Organization.",pDto);
+            super.getDao().insert("admin.setting.Organization.userInfoAdd",pDto);
 
             return true;
         }
@@ -51,8 +74,18 @@ public class OrganizationServiceImpl extends Cooper4AdminBaseServiceImpl impleme
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void userEdit(Dto pDto)
+    public void userEdit(Dto pDto)throws IOException
     {
+        if (pDto.getAsInteger("isUploadPhoto") == 1)
+        {
+            ParamsDto paramsDto = (ParamsDto)pDto;
+
+            MultipartHttpServletRequest request = paramsDto.getMultipartHttpServletRequest();
+
+            fileUpLoadService.upload((MultipartFile)request.getFile("upLoadFile"),pDto);
+
+            pDto.put("userPhoto",pDto.getAsString("fileId"));
+        }
         super.getDao().update("admin.setting.Organization.userEdit",pDto);
 
         super.getDao().update("admin.setting.Organization.userInfoEdit",pDto);

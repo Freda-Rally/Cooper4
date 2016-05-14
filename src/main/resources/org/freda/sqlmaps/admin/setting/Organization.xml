@@ -32,9 +32,11 @@
             _COOPER4_USER._DESC AS userDesc,
             _COOPER4_USERINFO._SEX AS userSex,
             _COOPER4_USERINFO._TEL AS userTel,
-            _COOPER4_USERINFO._PHOTO AS userPhoto
+            _COOPER4_USERINFO._PHOTO AS fileId,
+            CONCAT(_COOPER4_FILE._PATH,_COOPER4_FILE._SYSTEMNAME) AS userPhoto
         FROM _COOPER4_USER
         LEFT JOIN _COOPER4_USERINFO ON _COOPER4_USERINFO._USERID = _COOPER4_USER._USERID
+        LEFT JOIN _COOPER4_FILE ON _COOPER4_FILE._FILEID = _COOPER4_USERINFO._PHOTO
         WHERE
             _COOPER4_USER._USERID = #{userId}
     </select>
@@ -43,6 +45,7 @@
     <insert id="userAdd" parameterType="dto">
         INSERT INTO _COOPER4_USER(
             _COOPER4_USER._USERID,
+            _COOPER4_USER._DEPTID,
             _COOPER4_USER._USERNAME,
             _COOPER4_USER._ACCOUNT,
             _COOPER4_USER._PASSWORD,
@@ -51,7 +54,7 @@
             _COOPER4_USER._USERTYPE,
             _COOPER4_USER._CREATETIME,
             _COOPER4_USER._DESC
-        )VALUES(#{userId},#{userName},#{account},#{passWord},#{locked},#{status},#{userType},NOW(),#{userDesc})
+        )VALUES(#{userId},#{deptId},#{userName},#{account},#{password},#{locked},#{status},#{userType},NOW(),#{userDesc})
     </insert>
 
     <!-- 账号唯一性 -->
@@ -68,9 +71,15 @@
         INSERT INTO _COOPER4_USERINFO(
             _COOPER4_USERINFO._USERID,
             _COOPER4_USERINFO._SEX,
-            _COOPER4_USERINFO._TEL,
-            _COOPER4_USERINFO._PHOTO
-        )VALUES(#{userId},#{userSex},#{userTel},#{userPhoto})
+            <if test="userPhoto != null and userPhoto != ''">
+                _COOPER4_USERINFO._PHOTO,
+            </if>
+            _COOPER4_USERINFO._TEL
+        )VALUES(#{userId},#{userSex},
+          <if test="userPhoto != null and userPhoto != ''">
+              #{userPhoto},
+          </if>
+        #{userTel})
     </insert>
 
     <!-- 人员信息修改 -->
@@ -78,9 +87,6 @@
         UPDATE _COOPER4_USER SET
             _COOPER4_USER._USERNAME = #{userName},
             _COOPER4_USER._ACCOUNT = #{account},
-            <if test="passWord != null and passWord != ''">
-                _COOPER4_USER._PASSWORD = #{passWord},
-            </if>
             _COOPER4_USER._LOCKED = #{locked},
             _COOPER4_USER._STATUS = #{status},
             _COOPER4_USER._USERTYPE = #{userType},
@@ -93,8 +99,10 @@
     <update id="userInfoEdit" parameterType="dto">
         UPDATE _COOPER4_USERINFO SET
             _COOPER4_USERINFO._SEX = #{userSex},
-            _COOPER4_USERINFO._TEL = #{userTel},
-            _COOPER4_USERINFO._PHOTO = #{userPhoto}
+            <if test="isUploadPhoto == 1">
+                _COOPER4_USERINFO._PHOTO = #{userPhoto},
+            </if>
+        _COOPER4_USERINFO._TEL = #{userTel}
         WHERE
             _COOPER4_USERINFO._USERID = #{userId}
     </update>
@@ -116,7 +124,7 @@
             D1._DEPTID AS deptId,
             D1._DEPTNAME AS deptName,
             D1._DESC AS deptDesc,
-            D1._PARENTID AS deptParentId,
+            D1._PARENTID AS parentId,
             D2._DEPTNAME AS parentName,
             D1._LEAF AS deptLeaf,
             D1._CUSTOMID AS customId,
@@ -144,7 +152,7 @@
             _COOPER4_DEPT._SORTNO,
             _COOPER4_DEPT._STATUS,
             _COOPER4_DEPT._CREATETIME
-        )VALUES(#{deptId},#{deptName},#{deptDesc},#{deptParentId},1,#{customId},#{sortNo},#{status},NOW())
+        )VALUES(#{deptId},#{deptName},#{deptDesc},#{parentId},1,#{customId},#{sortNo},#{status},NOW())
     </insert>
 
     <!-- 部门信息修改 -->
@@ -164,7 +172,7 @@
     </delete>
 
     <!-- 查询部门下用户ID -->
-    <select id="getUsersByDept" parameterType="dto">
+    <select id="getUsersByDept" parameterType="dto" resultType="dto">
         SELECT
         _COOPER4_USER._USERID AS userId
         FROM _COOPER4_USER

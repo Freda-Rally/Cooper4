@@ -14,7 +14,7 @@ Ext.define('Cooper4.plugins.setting.menu.AddOrEditWin',{
 
         this.callParent([Ext.apply({
 
-            ayout : 'fit',
+            layout : 'fit',
             width : 450,
             height : 315,
             resizable : false,

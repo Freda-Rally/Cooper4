@@ -1,10 +1,11 @@
 package org.freda.cooper4.admin.setting.controller;
 
 import com.github.pagehelper.Page;
-import org.freda.cooper4.admin.setting.utils.SettingContainer;
 import org.freda.cooper4.admin.setting.service.DeptTreeService;
 import org.freda.cooper4.admin.setting.service.OrganizationService;
+import org.freda.cooper4.admin.setting.utils.SettingContainer;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseController;
+import org.freda.cooper4.framework.datastructure.Dto;
 import org.freda.cooper4.framework.json.JsonHelper;
 import org.freda.cooper4.framework.utils.SystemContainer;
 import org.springframework.stereotype.Controller;
@@ -58,7 +59,7 @@ public class OrganizationController extends Cooper4AdminBaseController
     @RequestMapping(value = "/userLoad")
     public String userLoad(HttpServletRequest request,HttpServletResponse response)throws Exception
     {
-        super.write(JsonHelper.encodeObject2Json(cooper4Reader.queryForObject("admin.setting.Organization.loadUser",super.getParamsAsDto(request))),response);
+        super.write(JsonHelper.encodeDto2FormLoadJson((Dto)cooper4Reader.queryForObject("admin.setting.Organization.loadUser",super.getParamsAsDto(request)),null),response);
 
         return null;
     }
@@ -140,7 +141,7 @@ public class OrganizationController extends Cooper4AdminBaseController
     {
         Page page = cooper4Reader.queryForPage("admin.setting.Organization.deptList4Page",super.getParamsAsDto(request));
 
-        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal()),response);
+        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal(),SystemContainer.DATE_TIME_FORMART[0]),response);
 
         return null;
     }

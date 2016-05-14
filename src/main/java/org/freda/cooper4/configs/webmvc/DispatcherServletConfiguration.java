@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import javax.servlet.MultipartConfigElement;
+
 /**
  *
  * 修改DispatcherServlet默认配置
@@ -30,6 +32,8 @@ public class DispatcherServletConfiguration
         registration.getUrlMappings().clear();
 
         registration.addUrlMappings(DISPATCHER_SERVLET_URL);
+
+        registration.setMultipartConfig(new MultipartConfigElement("",104857600,104857600,0));
 
         return registration;
     }
