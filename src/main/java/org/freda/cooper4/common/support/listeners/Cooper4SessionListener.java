@@ -73,10 +73,10 @@ public class Cooper4SessionListener implements HttpSessionListener,HttpSessionAt
     @Override
     public void sessionDestroyed(HttpSessionEvent arg0)
     {
-        UserInfoVo userInfoVo = new UserInfoVo();
-
-        userInfoVo.setSessionId(arg0.getSession().getId());
-
-        sessionMonitorService.del4Monitor(userInfoVo);
+//        UserInfoVo userInfoVo = new UserInfoVo();
+//
+//        userInfoVo.setSessionId(arg0.getSession().getId());
+//
+//        sessionMonitorService.del4Monitor(userInfoVo);
     }
 }

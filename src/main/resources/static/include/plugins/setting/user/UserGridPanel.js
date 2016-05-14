@@ -161,7 +161,11 @@ Ext.define('Cooper4.plugins.setting.user.UserGridPanel',{
                     text: '权限管理',
                     menu: [{
                         text:'绑定角色',
-                        iconCls : 'edit1Icon'
+                        iconCls : 'edit1Icon',
+                        handler : function() {
+
+                            that.onRoleAuthBtnClick();
+                        }
                     }]
                 }],
                 //分页工具栏
@@ -200,5 +204,12 @@ Ext.define('Cooper4.plugins.setting.user.UserGridPanel',{
     onDeleteBtnClick : function(){
 
         this.fireEvent('eventOnDeleteBtnClick',Ext.getCmp('userGrid'));
+    },
+    /**
+     * 绑定角色按钮点击出发.
+     */
+    onRoleAuthBtnClick : function(){
+
+        this.fireEvent('eventOnRoleAuthBtnClick',Ext.getCmp('userGrid'));
     }
 });

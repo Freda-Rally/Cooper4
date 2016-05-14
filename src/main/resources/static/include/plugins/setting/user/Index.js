@@ -34,6 +34,11 @@ Ext.define('Cooper4.plugins.setting.user.Index',{
 
                         that.deleteUser(grid);
                     }
+                },{
+                    'eventOnRoleAuthBtnClick' : function(grid){
+
+                        that.setAuthWinInit(grid);
+                    }
                 }]
             }),Ext.create('Cooper4.plugins.setting.user.DeptTreePanel',{
 
@@ -199,7 +204,7 @@ Ext.define('Cooper4.plugins.setting.user.Index',{
                         url : '/organization/userDelete.freda',
                         method : 'POST',
                         params : {
-                            userId : Cooper4.jsArray2JsString(record,'userId')
+                            ids : Cooper4.jsArray2JsString(record,'userId')
                         },
                         success: function(response) {
                             var result = Ext.JSON.decode(response.responseText);
@@ -210,5 +215,74 @@ Ext.define('Cooper4.plugins.setting.user.Index',{
                 }
             }
         });
+    },
+    /**
+     * 权限窗口初始化..
+     * @param grid
+     */
+    setAuthWinInit : function(grid){
+
+        var that = this;
+
+        var record = grid.getSelectionModel().getSelection();
+        if(Ext.isEmpty(record)) {
+
+            Cooper4.showAlert("请选择授权项.");
+            return ;
+        }
+        if(record.length > 1){
+
+            Cooper4.showAlert("请选择单一项.");
+            return ;
+        }
+
+        Cooper4.GLOBAL_PARAMS.userId = record[0].get('userId');
+        Cooper4.GLOBAL_PARAMS.userType = record[0].get('userType');
+
+        Ext.create('Cooper4.plugins.setting.user.AuthWin',{
+
+            listeners : [{
+
+                'eventOnSetRoleAuthBtnClick' : function(win,treePanel){
+
+                    that.submitSetAuth(win,treePanel);
+                }
+            }]
+
+        }).show();
+
+        Ext.getCmp('roleTreePanel').expandAll();
+    },
+    /**
+     * 提交绑定.
+     * @param win
+     * @param treePanel
+     */
+    submitSetAuth : function(win,treePanel){
+
+        Ext.Msg.show({
+            title:'提示',
+            message: '确定设置权限?',
+            buttons: Ext.Msg.YESNO,
+            icon: Ext.Msg.QUESTION,
+            fn: function(btn) {
+                if (btn === 'yes') {
+                    Cooper4.ux.Ajax.request({
+                        url : '/authority/role2User.freda',
+                        method : 'POST',
+                        params : {
+                            ids : Cooper4.jsArray2JsString(treePanel.getChecked(),'id'),
+                            userId : Cooper4.GLOBAL_PARAMS.userId
+                        },
+                        success: function(response) {
+                            var result = Ext.JSON.decode(response.responseText);
+                            Cooper4.showAlert(result.msg);
+                            win.close();
+                        }
+                    });
+                }
+            }
+        });
+
     }
 });

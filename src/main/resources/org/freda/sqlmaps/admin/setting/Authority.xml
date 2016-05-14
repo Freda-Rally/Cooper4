@@ -56,8 +56,9 @@
             _COOPER4_USER_ROLE._ROLEID AS roleId
         FROM _COOPER4_USER
         LEFT JOIN _COOPER4_USER_ROLE ON _COOPER4_USER_ROLE._USERID = _COOPER4_USER._USERID
+                                     AND _COOPER4_USER_ROLE._ROLEID = #{roleId}
         WHERE
-            _COOPER4_USER._DEPTID = #{node}
+            CONCAT('dept_',_COOPER4_USER._DEPTID) = #{node}
             AND _COOPER4_USER._STATUS = 1
             AND _COOPER4_USER._LOCKED = 0
             <if test="roleType == 1">
@@ -69,14 +70,15 @@
     <!-- 角色树附带人员绑定信息. -->
     <select id="roleTreeWithUser" parameterType="dto" resultType="dto">
         SELECT
-            _COOPER4_ROLE._ROLEID AS id,
+            CONCAT('role_',_COOPER4_ROLE._ROLEID) AS id,
             _COOPER4_ROLE._ROLENAME AS text,
-            1 AS parentId,
+            'role_1' AS parentId,
             1 AS leaf,
             '' AS iconCls,
             _COOPER4_USER_ROLE._USERID AS userId
         FROM _COOPER4_ROLE
         LEFT JOIN _COOPER4_USER_ROLE ON _COOPER4_USER_ROLE._ROLEID = _COOPER4_ROLE._ROLEID
+                                     AND _COOPER4_USER_ROLE._USERID = #{userId}
         WHERE
             _COOPER4_ROLE._STATUS = 1
             <if test="userType == 3">
@@ -96,8 +98,9 @@
             _COOPER4_ROLE_MENU._ROLEID AS roleId
         FROM _COOPER4_MENU
         LEFT JOIN _COOPER4_ROLE_MENU ON _COOPER4_ROLE_MENU._MENUID = _COOPER4_MENU._MENUID
+                                     AND _COOPER4_ROLE_MENU._ROLEID = #{roleId}
         WHERE
-            _COOPER4_MENU._PARENTID = 'menu_${node}'
+            CONCAT('menu_',_COOPER4_MENU._PARENTID) = #{node}
             AND _COOPER4_MENU._STATUS = 1
             <if test="roleType == 2">
                 AND _COOPER4_MENU._MENUTYPE = 2

@@ -16,7 +16,7 @@ Ext.define('Cooper4.plugins.setting.role.AddOrEditWin',{
 
             layout : 'fit',
             width : 450,
-            height : 235,
+            height : 205,
             resizable : false,
             draggable : true,
             closeAction : 'hide',

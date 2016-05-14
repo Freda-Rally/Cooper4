@@ -146,7 +146,7 @@ Ext.define('Cooper4.plugins.setting.role.RoleGridPanel',{
                         specialkey : function(field, e) {
                             if (e.getKey() == Ext.EventObject.ENTER) {
 
-                                Ext.data.StoreManager.lookup('codeStore').load();
+                                Ext.data.StoreManager.lookup('roleStore').load();
                             }
                         }
                     }
@@ -155,15 +155,24 @@ Ext.define('Cooper4.plugins.setting.role.RoleGridPanel',{
                     iconCls : 'page_findIcon',
                     handler : function() {
 
-                        Ext.data.StoreManager.lookup('codeStore').load();
+                        Ext.data.StoreManager.lookup('roleStore').load();
                     }
                 },'->',{
-                    text : '授权',
-                    iconCls : 'arrow_switchIcon',
-                    handler : function() {
-
-
-                    }
+                    xtype: 'button',
+                    text: '权限管理',
+                    menu: [{
+                        text:'绑定菜单',
+                        iconCls : 'edit1Icon',
+                        handler : function(){
+                            that.onAuthBtnClick('menu');
+                        }
+                    },{
+                        text : '绑定用户',
+                        iconCls : 'edit1Icon',
+                        handler : function(){
+                            that.onAuthBtnClick('user');
+                        }
+                    }]
                 }],
                 //分页工具栏
                 dockedItems : [{
@@ -207,6 +216,13 @@ Ext.define('Cooper4.plugins.setting.role.RoleGridPanel',{
         var that = this;
 
         this.fireEvent('eventOnDeleteBtnClick',Ext.getCmp('roleGrid'));
+    },
+    /**
+     * 权限Menu点击.
+     */
+    onAuthBtnClick : function(ac){
+
+        this.fireEvent('eventOnAuthBtnClick',Ext.getCmp('roleGrid'),ac);
     }
 
 });

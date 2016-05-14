@@ -34,6 +34,11 @@ Ext.define('Cooper4.plugins.setting.role.Index',{
 
                         that.deleteRole(grid);
                     }
+                },{
+                    'eventOnAuthBtnClick' : function(grid,ac){
+
+                        that.setAuthWinInit(grid,ac);
+                    }
                 }]
             })]
         });
@@ -176,6 +181,102 @@ Ext.define('Cooper4.plugins.setting.role.Index',{
                             var result = Ext.JSON.decode(response.responseText);
                             Cooper4.showAlert(result.msg);
                             Ext.data.StoreManager.lookup('roleStore').reload();
+                        }
+                    });
+                }
+            }
+        });
+    },
+    /**
+     * 权限窗口初始化.
+     *
+     * @param grid
+     * @param av
+     */
+    setAuthWinInit : function(grid,av){
+
+        var that = this;
+
+        var record = Ext.getCmp('roleGrid').getSelectionModel().getSelection();
+        if(Ext.isEmpty(record))
+        {
+            Cooper4.showAlert('请选择..');
+            return ;
+        }
+        if(record.length > 1)
+        {
+            Cooper4.showAlert('请选择单一进行授权.');
+            return ;
+        }
+        if(record[0].get('editMode') == 0)
+        {
+            Cooper4.showAlert('无权进行操作.');
+            return ;
+        }
+        Cooper4.GLOBAL_PARAMS.roleId = record[0].get('roleId');
+        Cooper4.GLOBAL_PARAMS.roleType = record[0].get('roleType');
+
+        Ext.create('Cooper4.plugins.setting.role.AuthWin',{
+
+            listeners : [{
+
+                'eventSetMenuBtnClick' : function(win,treePanel){
+
+                    that.submitSetAuth(win,'menu',treePanel);
+                }
+            },{
+                'eventSetUserBtnClick' : function(win,treePanel){
+
+                    that.submitSetAuth(win,'user',treePanel);
+                }
+            }]
+
+        }).show();
+
+        Ext.getCmp('userTreePanel').expandAll();
+        Ext.getCmp('menuTreePanel').expandAll();
+
+        if(av == 'menu'){
+            Ext.getCmp('treeTabPanel').setActiveTab(0);
+        }else{
+            Ext.getCmp('treeTabPanel').setActiveTab(1);
+        }
+    },
+    /**
+     * 提交绑定
+     *
+     * @param treePanel
+     */
+    submitSetAuth : function(win,mode,treePanel){
+
+        var submitUrl = '';
+
+        if(mode == 'menu'){
+
+            submitUrl = '/authority/menu2Role.freda';
+        }else{
+
+            submitUrl = '/authority/user2Role.freda'
+        }
+
+        Ext.Msg.show({
+            title:'提示',
+            message: '确定设置权限?',
+            buttons: Ext.Msg.YESNO,
+            icon: Ext.Msg.QUESTION,
+            fn: function(btn) {
+                if (btn === 'yes') {
+                    Cooper4.ux.Ajax.request({
+                        url : submitUrl,
+                        method : 'POST',
+                        params : {
+                            ids : Cooper4.jsArray2JsString(treePanel.getChecked(),'id'),
+                            roleId : Cooper4.GLOBAL_PARAMS.roleId
+                        },
+                        success: function(response) {
+                            var result = Ext.JSON.decode(response.responseText);
+                            Cooper4.showAlert(result.msg);
+                            win.close();
                         }
                     });
                 }

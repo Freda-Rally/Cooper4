@@ -38,13 +38,13 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     {
         String[] ids = pDto.getAsString("ids").split(",");
 
-        super.getDao().delete("admin.setting.Authority.deleteByRole",pDto);
+        super.getDao().delete("admin.setting.Authority.deleteByRole4UserRole",pDto);
 
         for (String id : ids)
         {
             if (FredaUtils.isNotEmpty(id))
             {
-                pDto.put("userId",id);
+                pDto.put("userId",id.split("_")[1]);
 
                 pDto.put("userRoleId", Cooper4DBIdHelper.getDbTableID("USERROLEID"));
 
@@ -64,11 +64,13 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     {
         String[] ids = pDto.getAsString("ids").split(",");
 
-        super.getDao().delete("admin.setting.Authority.deleteByUser",pDto);
+        super.getDao().delete("admin.setting.Authority.deleteByUser4UserRole",pDto);
 
         for (String id : ids)
         {
-            pDto.put("roleId",id);
+            pDto.put("roleId",id.split("_")[1]);
+
+            pDto.put("userRoleId", Cooper4DBIdHelper.getDbTableID("USERROLEID"));
 
             super.getDao().insert("admin.setting.Authority.addUserRole",pDto);
         }
@@ -89,7 +91,7 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
 
         for (String id : ids)
         {
-            pDto.put("menuId",id);
+            pDto.put("menuId",id.split("_")[1]);
 
             pDto.put("roleMenuId",Cooper4DBIdHelper.getDbTableID("ROLEMENUID"));
 
@@ -148,8 +150,6 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
 
         if (FredaUtils.isEmpty(data))//末级部门查询用户.
         {
-            pDto.put("node",pDto.getAsString("node").split("_")[1]);
-
             data = this.setListChecked(super.getDao().queryForList("admin.setting.Authority.listUserWithRole",pDto),"roleId");
         }
         else
