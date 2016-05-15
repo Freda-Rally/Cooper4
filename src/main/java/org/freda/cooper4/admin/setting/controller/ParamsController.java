@@ -9,6 +9,7 @@ import org.freda.cooper4.framework.utils.SystemContainer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/params")
 public class ParamsController extends Cooper4AdminBaseController
 {
-
+    @Resource
     private ParamsManagerService paramsManagerService;
     /**
      * 分页查询参数.
@@ -99,8 +100,8 @@ public class ParamsController extends Cooper4AdminBaseController
      * @return
      * @throws Exception
      */
-    @RequestMapping("/syn2ACache")
-    public String syn2ACache(HttpServletRequest request,HttpServletResponse response) throws Exception
+    @RequestMapping("/syn2Cache")
+    public String syn2Cache(HttpServletRequest request,HttpServletResponse response) throws Exception
     {
         ParamsInitService paramsInitService = (ParamsInitService)paramsManagerService;
 
