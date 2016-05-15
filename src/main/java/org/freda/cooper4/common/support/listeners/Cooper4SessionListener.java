@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.freda.cooper4.common.service.SessionMonitorService;
 import org.freda.cooper4.common.vo.UserInfoVo;
+import org.freda.cooper4.configs.webmvc.MySessionContext;
 import org.freda.cooper4.framework.utils.FredaUtils;
 import org.freda.cooper4.framework.utils.SystemContainer;
 
@@ -28,6 +29,9 @@ public class Cooper4SessionListener implements HttpSessionListener,HttpSessionAt
     @Resource
     private SessionMonitorService sessionMonitorService;
 
+    @Resource
+    private MySessionContext mySessionContext;
+
     @Override
     public void attributeAdded(HttpSessionBindingEvent arg0)
     {
@@ -38,6 +42,8 @@ public class Cooper4SessionListener implements HttpSessionListener,HttpSessionAt
             userInfoVo.setSessionId(arg0.getSession().getId());
 
             sessionMonitorService.add4Monitor(userInfoVo);
+
+            mySessionContext.addSession(arg0.getSession());
 
             log.debug(userInfoVo.getAccount() + " : 登录成功.. SessionId : " + userInfoVo.getSessionId() + ".. 时间 : " + FredaUtils.getCurrentTime());
         }
@@ -53,6 +59,8 @@ public class Cooper4SessionListener implements HttpSessionListener,HttpSessionAt
             userInfoVo.setSessionId(arg0.getSession().getId());
 
             sessionMonitorService.del4Monitor(userInfoVo);
+
+            mySessionContext.removeSession(arg0.getSession());
 
             log.debug(userInfoVo.getAccount() + " : 退出成功.. SessionId : " + userInfoVo.getSessionId() + ".. 时间 : " + FredaUtils.getCurrentTime());
         }

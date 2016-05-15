@@ -29,4 +29,22 @@
         DELETE FROM _COOPER4_SESSION WHERE _COOPER4_SESSION._SESSIONID = #{sessionId}
     </delete>
 
+    <!-- 查询 -->
+    <select id="list4Page" parameterType="dto" resultType="dto">
+        SELECT
+            _COOPER4_SESSION._SESSIONID AS sessionId,
+            _COOPER4_SESSION._USERID AS userId,
+            _COOPER4_SESSION._USERNAME AS userName,
+            _COOPER4_SESSION._ACCOUNT AS userAccount,
+            _COOPER4_SESSION._LOGINIP AS ipAddr,
+            _COOPER4_SESSION._EXPLORER AS explorer,
+            _COOPER4_SESSION._CREATETIME AS createTime
+        FROM _COOPER4_SESSION
+        WHERE
+            1 =1
+            <if test="queryContent != null and queryContent != ''">
+                AND _COOPER4_SESSION._USERNAME LIKE '%${queryContent}%'
+            </if>
+    </select>
+
 </mapper>
