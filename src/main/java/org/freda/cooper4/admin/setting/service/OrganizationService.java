@@ -2,6 +2,8 @@ package org.freda.cooper4.admin.setting.service;
 
 import org.freda.cooper4.framework.datastructure.Dto;
 
+import java.io.IOException;
+
 /**
  *
  * 人员.部门.角色.修改/新增/删除.
@@ -14,13 +16,13 @@ public interface OrganizationService
      * 人员新增
      * @param pDto
      */
-    public abstract boolean userAdd(Dto pDto);
+    public abstract boolean userAdd(Dto pDto) throws IOException;
 
     /**
      * 人员信息修改.
      * @param pDto
      */
-    public abstract void userEdit(Dto pDto);
+    public abstract void userEdit(Dto pDto)throws IOException;
 
     /**
      * 人员删除.

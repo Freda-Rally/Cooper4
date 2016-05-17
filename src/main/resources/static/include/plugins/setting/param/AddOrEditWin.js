@@ -1,10 +1,9 @@
 /**
+ * 新增修改全局参数窗口
  *
- * 添加修改时用的window
- *
- * Created by rally on 16/5/5.
+ * Created by rally on 16/5/15.
  */
-Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
+Ext.define('Cooper4.plugins.setting.param.AddOrEditWin',{
 
     extend: 'Ext.window.Window',
 
@@ -16,11 +15,11 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
 
             layout : 'fit',
             width : 450,
-            height : 255,
+            height : 205,
             resizable : false,
             draggable : true,
             closeAction : 'hide',
-            title : '<span>数据字典信息</span>',
+            title : '<span>全局参数信息</span>',
             modal : true,
             collapsible : true,
             titleCollapse : true,
@@ -34,8 +33,8 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
             constrain : true,
 
             items : [Ext.create('Ext.form.Panel',{
-                id : 'codeFormPanel',
-                name : 'codeFormPanel',
+                id : 'paramFormPanel',
+                name : 'paramFormPanel',
                 labelAlign : 'right',
                 labelWidth : 110,
                 frame : false,
@@ -46,42 +45,16 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
                 },
                 defaultType: 'textfield',
                 items: [{
-                    fieldLabel : '字典集合名称*',
+                    fieldLabel : '参数键',
                     blankText : '请勿填空值..',
-                    name : 'fieldId',
-                    id : 'fieldId',
-                    allowBlank : false
-                },{
-                    fieldLabel : '描述',
-                    blankText : '请勿填空值..',
-                    name : 'fieldName',
-                    id : 'fieldName'
-                },{
-                    fieldLabel : '名称',
-                    blankText : '请勿填空值..',
-                    name : 'codeDesc',
-                    id : 'codeDesc',
+                    name : 'pKey',
+                    id : 'pKey',
                     allowBlank : false
                 },{
                     fieldLabel : '值',
                     blankText : '请勿填空值..',
-                    name : 'code',
-                    id : 'code',
-                    xtype : 'numberfield',
-                    maxValue: 99,
-                    minValue: 0,
-                    step: 1,
-                    allowBlank : false
-                },{
-                    fieldLabel : '排序号',
-                    blankText : '请勿填空值..',
-                    name : 'sortNo',
-                    id : 'sortNo',
-                    xtype : 'numberfield',
-                    maxValue: 99,
-                    minValue: 0,
-                    step: 1,
-                    value:0,
+                    name : 'pValue',
+                    id : 'pValue',
                     allowBlank : false
                 },{
                     xtype : 'combo',
@@ -100,9 +73,14 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
                     displayField: 'name',
                     valueField: 'code'
                 },{
+                    fieldLabel : '描述',
+                    blankText : '请勿填空值..',
+                    name : 'pDesc',
+                    id : 'pDesc'
+                },{
                     xtype : 'hiddenfield',
-                    id : 'codeId',
-                    name : 'codeId'
+                    id : 'paramId',
+                    name : 'paramId'
                 },{
                     xtype : 'hiddenfield',
                     id : 'submitMode',
@@ -131,7 +109,7 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
      */
     onSaveBtnClick : function(){
 
-        this.fireEvent('eventSave',this,Ext.getCmp('codeFormPanel'));
+        this.fireEvent('eventSave',this,Ext.getCmp('paramFormPanel'));
     },
     /**
      * 点击关闭

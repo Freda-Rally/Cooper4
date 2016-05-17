@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="admin.setting.Menu">
+
+    <!-- 查询 -->
+    <select id="list4Page" parameterType="dto" resultType="dto">
+        SELECT
+            M1._MENUID AS menuId,
+            M1._MENUNAME AS menuName,
+            M1._PARENTID AS parentId,
+            M2._MENUNAME AS parentName,
+            M1._ICONCLS AS iconCls,
+            M1._REQUEST AS menuRequest,
+            M1._LEAF AS menuLeaf,
+            M1._SORTNO AS sortNo,
+            M1._MENUTYPE AS menuType,
+            M1._STATUS AS status,
+            M1._EDITMODE AS editMode,
+            M1._DESC AS menuDesc,
+            M1._CREATETIME AS createTime
+        FROM _COOPER4_MENU M1
+        JOIN _COOPER4_MENU M2 ON M2._MENUID = M1._PARENTID
+        WHERE
+            (M1._MENUID = #{parentId} OR M1._PARENTID = #{parentId})
+            <if test="queryContent != null and queryContent !=''">
+                AND M1._MENUNAME LIKE '%${queryContent}%'
+            </if>
+        ORDER BY M1._SORTNO,M1._MENUID ASC
+    </select>
+
+    <!-- 树 -->
+    <select id="menuTreeInit" parameterType="dto" resultType="dto">
+        SELECT
+            CONCAT('menu_',_COOPER4_MENU._MENUID) AS id,
+            _COOPER4_MENU._MENUNAME AS text,
+            CONCAT('menu_',_COOPER4_MENU._PARENTID) AS parentId,
+            _COOPER4_MENU._LEAF AS leaf,
+            _COOPER4_MENU._ICONCLS AS iconCls
+        FROM _COOPER4_MENU
+        WHERE
+            CONCAT('menu_',_COOPER4_MENU._PARENTID) = #{node}
+        ORDER BY _COOPER4_MENU._SORTNO,_COOPER4_MENU._MENUID ASC
+    </select>
+
+    <!-- 添加 -->
+    <insert id="add" parameterType="dto">
+        INSERT INTO _COOPER4_MENU(
+            _COOPER4_MENU._MENUID,
+            _COOPER4_MENU._MENUNAME,
+            _COOPER4_MENU._PARENTID,
+            _COOPER4_MENU._ICONCLS,
+            _COOPER4_MENU._REQUEST,
+            _COOPER4_MENU._LEAF,
+            _COOPER4_MENU._SORTNO,
+            _COOPER4_MENU._MENUTYPE,
+            _COOPER4_MENU._STATUS,
+            _COOPER4_MENU._DESC,
+            _COOPER4_MENU._CREATETIME
+        )VALUES(#{menuId},#{menuName},#{parentId},#{iconCls},#{menuRequest},1,#{sortNo},#{menuType},#{status},#{menuDesc},NOW())
+    </insert>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="dto">
+        UPDATE _COOPER4_MENU SET
+            _COOPER4_MENU._MENUNAME = #{menuName},
+            _COOPER4_MENU._ICONCLS = #{iconCls},
+            _COOPER4_MENU._REQUEST = #{menuRequest},
+            _COOPER4_MENU._SORTNO = #{sortNo},
+            _COOPER4_MENU._MENUTYPE = #{menuType},
+            _COOPER4_MENU._STATUS = #{status},
+            _COOPER4_MENU._DESC = #{menuDesc}
+        WHERE
+            _COOPER4_MENU._MENUID = #{menuId}
+            AND _COOPER4_MENU._EDITMODE = 1
+    </update>
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="dto">
+        DELETE FROM _COOPER4_MENU
+        WHERE
+            _COOPER4_MENU._MENUID = #{menuId}
+            AND _COOPER4_MENU._EDITMODE = 1
+    </delete>
+
+    <!-- 修改Leaf -->
+    <update id="editMenuLeaf" parameterType="dto">
+        UPDATE _COOPER4_MENU SET _COOPER4_MENU._LEAF = #{leaf} WHERE _COOPER4_MENU._MENUID = #{parentId}
+    </update>
+
+    <select id="isLastSub" parameterType="dto" resultType="java.lang.Integer">
+        SELECT
+          COUNT(1)
+        FROM _COOPER4_MENU
+        WHERE
+          _COOPER4_MENU._PARENTID = #{parentId}
+    </select>
+
+</mapper>

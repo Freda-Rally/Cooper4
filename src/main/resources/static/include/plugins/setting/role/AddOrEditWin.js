@@ -1,10 +1,10 @@
 /**
  *
- * 添加修改时用的window
+ * 添加修改窗口
  *
- * Created by rally on 16/5/5.
+ * Created by rally on 16/5/12.
  */
-Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
+Ext.define('Cooper4.plugins.setting.role.AddOrEditWin',{
 
     extend: 'Ext.window.Window',
 
@@ -16,11 +16,11 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
 
             layout : 'fit',
             width : 450,
-            height : 255,
+            height : 205,
             resizable : false,
             draggable : true,
             closeAction : 'hide',
-            title : '<span>数据字典信息</span>',
+            title : '<span>角色信息</span>',
             modal : true,
             collapsible : true,
             titleCollapse : true,
@@ -34,8 +34,8 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
             constrain : true,
 
             items : [Ext.create('Ext.form.Panel',{
-                id : 'codeFormPanel',
-                name : 'codeFormPanel',
+                id : 'roleFormPanel',
+                name : 'roleFormPanel',
                 labelAlign : 'right',
                 labelWidth : 110,
                 frame : false,
@@ -46,43 +46,32 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
                 },
                 defaultType: 'textfield',
                 items: [{
-                    fieldLabel : '字典集合名称*',
+                    fieldLabel : '角色名称',
                     blankText : '请勿填空值..',
-                    name : 'fieldId',
-                    id : 'fieldId',
+                    name : 'roleName',
+                    id : 'roleName',
                     allowBlank : false
+                },{
+                    xtype : 'combo',
+                    fieldLabel : '类型',
+                    id : 'roleType',
+                    name : 'roleType',
+                    editable : false,
+                    triggerAction : 'all',
+                    queryMode: 'local',
+                    allowBlank : false,
+                    blankText : '请勿填控制.',
+                    store : Ext.create('Ext.data.Store',{
+                        fields: ['name', 'code'],
+                        data : Cooper4.getCodeArray('ROLETYPE')
+                    }),
+                    displayField: 'name',
+                    valueField: 'code'
                 },{
                     fieldLabel : '描述',
                     blankText : '请勿填空值..',
-                    name : 'fieldName',
-                    id : 'fieldName'
-                },{
-                    fieldLabel : '名称',
-                    blankText : '请勿填空值..',
-                    name : 'codeDesc',
-                    id : 'codeDesc',
-                    allowBlank : false
-                },{
-                    fieldLabel : '值',
-                    blankText : '请勿填空值..',
-                    name : 'code',
-                    id : 'code',
-                    xtype : 'numberfield',
-                    maxValue: 99,
-                    minValue: 0,
-                    step: 1,
-                    allowBlank : false
-                },{
-                    fieldLabel : '排序号',
-                    blankText : '请勿填空值..',
-                    name : 'sortNo',
-                    id : 'sortNo',
-                    xtype : 'numberfield',
-                    maxValue: 99,
-                    minValue: 0,
-                    step: 1,
-                    value:0,
-                    allowBlank : false
+                    name : 'roleDesc',
+                    id : 'roleDesc'
                 },{
                     xtype : 'combo',
                     fieldLabel : '状态',
@@ -101,8 +90,8 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
                     valueField: 'code'
                 },{
                     xtype : 'hiddenfield',
-                    id : 'codeId',
-                    name : 'codeId'
+                    id : 'roleId',
+                    name : 'roleId'
                 },{
                     xtype : 'hiddenfield',
                     id : 'submitMode',
@@ -131,7 +120,7 @@ Ext.define('Cooper4.plugins.setting.code.AddOrEditWin',{
      */
     onSaveBtnClick : function(){
 
-        this.fireEvent('eventSave',this,Ext.getCmp('codeFormPanel'));
+        this.fireEvent('eventSave',this,Ext.getCmp('roleFormPanel'));
     },
     /**
      * 点击关闭

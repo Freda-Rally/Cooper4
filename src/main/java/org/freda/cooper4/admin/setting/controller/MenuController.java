@@ -1,8 +1,7 @@
 package org.freda.cooper4.admin.setting.controller;
 
 import com.github.pagehelper.Page;
-import org.freda.cooper4.admin.setting.service.ParamsManagerService;
-import org.freda.cooper4.common.service.ParamsInitService;
+import org.freda.cooper4.admin.setting.service.MenuManagerService;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseController;
 import org.freda.cooper4.framework.json.JsonHelper;
 import org.freda.cooper4.framework.utils.SystemContainer;
@@ -15,44 +14,47 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * 系统参数.
+ * 菜单资源管理.
  *
- * Created by rally on 16/5/5.
+ * Created by rally on 16/5/10.
  */
 @Controller
-@RequestMapping("/params")
-public class ParamsController extends Cooper4AdminBaseController
+@RequestMapping(value = "/menu")
+public class MenuController extends Cooper4AdminBaseController
 {
     @Resource
-    private ParamsManagerService paramsManagerService;
+    private MenuManagerService menuManagerService;
+
     /**
-     * 分页查询参数.
+     * 查询.
+     *
      * @param request
      * @param response
      * @return
      * @throws Exception
      */
-    @RequestMapping("/list4Page")
+    @RequestMapping(value = "/list4Page")
     public String list4Page(HttpServletRequest request,HttpServletResponse response) throws Exception
     {
-        Page page = cooper4Reader.queryForPage("admin.setting.Params.list4Page",super.getParamsAsDto(request));
+        Page page = cooper4Reader.queryForPage("admin.setting.Menu.list4Page",super.getParamsAsDto(request));
 
-        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal()),response);
+        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal(),SystemContainer.DATE_TIME_FORMART[0]),response);
 
         return null;
     }
 
     /**
-     * 添加
+     * 新增
+     *
      * @param request
      * @param response
      * @return
      * @throws Exception
      */
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add")
     public String add(HttpServletRequest request,HttpServletResponse response) throws Exception
     {
-        paramsManagerService.add(super.getParamsAsDto(request));
+        menuManagerService.add(super.getParamsAsDto(request));
 
         super.setOkTipMsg(SystemContainer.TIPS_SUCCESS_MSG,response);
 
@@ -60,16 +62,17 @@ public class ParamsController extends Cooper4AdminBaseController
     }
 
     /**
-     * 修改
+     * 修改.
+     *
      * @param request
      * @param response
      * @return
      * @throws Exception
      */
-    @RequestMapping("/edit")
+    @RequestMapping(value = "/edit")
     public String edit(HttpServletRequest request,HttpServletResponse response) throws Exception
     {
-        paramsManagerService.edit(super.getParamsAsDto(request));
+        menuManagerService.edit(super.getParamsAsDto(request));
 
         super.setOkTipMsg(SystemContainer.TIPS_SUCCESS_MSG,response);
 
@@ -77,16 +80,17 @@ public class ParamsController extends Cooper4AdminBaseController
     }
 
     /**
-     * 删除
+     * 删除.
+     *
      * @param request
      * @param response
      * @return
      * @throws Exception
      */
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete")
     public String delete(HttpServletRequest request,HttpServletResponse response) throws Exception
     {
-        paramsManagerService.delete(super.getParamsAsDto(request));
+        menuManagerService.delete(super.getParamsAsDto(request));
 
         super.setOkTipMsg(SystemContainer.TIPS_SUCCESS_MSG,response);
 
@@ -94,20 +98,16 @@ public class ParamsController extends Cooper4AdminBaseController
     }
 
     /**
-     * 同步
+     * 树
      * @param request
      * @param response
      * @return
      * @throws Exception
      */
-    @RequestMapping("/syn2Cache")
-    public String syn2Cache(HttpServletRequest request,HttpServletResponse response) throws Exception
+    @RequestMapping(value = "/menuTreeInit")
+    public String menuTreeInit(HttpServletRequest request,HttpServletResponse response) throws Exception
     {
-        ParamsInitService paramsInitService = (ParamsInitService)paramsManagerService;
-
-        paramsInitService.init(request.getServletContext());
-
-        super.setOkTipMsg(SystemContainer.TIPS_SUCCESS_MSG,response);
+        super.write(JsonHelper.encodeObject2Json(menuManagerService.menuTreeInit(super.getParamsAsDto(request))),response);
 
         return null;
     }

@@ -1,14 +1,15 @@
 /**
  *
- * 数据字典管理
+ * 角色管理
  *
- * Created by rally on 16/5/5.
+ * Created by rally on 16/5/12.
  */
-Ext.define('Cooper4.plugins.setting.code.Index',{
+
+Ext.define('Cooper4.plugins.setting.role.Index',{
 
     requires : ['Cooper4.ux.Ajax',
-                'Cooper4.plugins.setting.code.AddOrEditWin',
-                'Cooper4.plugins.setting.code.CodeGridPanel'],
+        'Cooper4.plugins.setting.role.AddOrEditWin',
+        'Cooper4.plugins.setting.role.RoleGridPanel'],
 
     constructor : function(){
 
@@ -16,7 +17,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
         Ext.create('Ext.container.Viewport',{
             layout : 'border',
-            items : [Ext.create('Cooper4.plugins.setting.code.CodeGridPanel',{
+            items : [Ext.create('Cooper4.plugins.setting.role.RoleGridPanel',{
 
                 listeners : [{
                     'eventOnAddBtnClick' : function(grid,mode){
@@ -31,26 +32,26 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
                 },{
                     'eventOnDeleteBtnClick' : function(grid){
 
-                        that.deleteCode(grid);
+                        that.deleteRole(grid);
                     }
                 },{
-                    'eventOnMoneySynBtnClick' : function(grid){
+                    'eventOnAuthBtnClick' : function(grid,ac){
 
-                        that.synMoneyCode();
+                        that.setAuthWinInit(grid,ac);
                     }
                 }]
             })]
         });
 
-        Ext.data.StoreManager.lookup('codeStore').load();
+        Ext.data.StoreManager.lookup('roleStore').load();
 
-        that.addOrEditWin = Ext.create('Cooper4.plugins.setting.code.AddOrEditWin',{
+        that.addOrEditWin = Ext.create('Cooper4.plugins.setting.role.AddOrEditWin',{
 
             listeners : {
 
                 'eventSave' : function(win,form){
 
-                    that.addOrEditCode(form);
+                    that.addOrEditRole(form);
                 }
             }
 
@@ -66,7 +67,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
             if(mode == 'add'){
 
-                Ext.getCmp('codeFormPanel').getForm().reset();
+                Ext.getCmp('roleFormPanel').getForm().reset();
                 Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_ADD);
             }else{
 
@@ -86,7 +87,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
                     Cooper4.showAlert("系统内置无法修改..");
                     return ;
                 }
-                Ext.getCmp('codeFormPanel').getForm().loadRecord(record[0]);
+                Ext.getCmp('roleFormPanel').getForm().loadRecord(record[0]);
                 Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_EDIT);
             }
             this.addOrEditWin.show();
@@ -95,7 +96,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
     /**
      * 提交添加或修改操作..
      */
-    addOrEditCode : function(form){
+    addOrEditRole : function(form){
 
         var that = this;
 
@@ -103,11 +104,11 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
         if(Ext.getCmp('submitMode').getValue() == 'add') {
 
-            submitUrl = "/code/add.freda";
+            submitUrl = "/organization/roleAdd.freda";
         }
         else{
 
-            submitUrl = "/code/edit.freda";
+            submitUrl = "/organization/roleEdit.freda";
         }
 
         Ext.Msg.show({
@@ -126,7 +127,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
                         success: function(form, action) {
                             that.addOrEditWin.hide();
                             Cooper4.showAlert(action.result.msg);
-                            Ext.data.StoreManager.lookup('codeStore').reload();
+                            Ext.data.StoreManager.lookup('roleStore').reload();
                         },
                         failure: function(form, action) {
                             switch (action.failureType) {
@@ -148,7 +149,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
     /**
      * 提交删除操作..
      */
-    deleteCode : function(grid){
+    deleteRole : function(grid){
 
         var record = grid.getSelectionModel().getSelection();
         if(Ext.isEmpty(record))
@@ -171,37 +172,111 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
             fn: function(btn) {
                 if (btn === 'yes') {
                     Cooper4.ux.Ajax.request({
-                        url : '/code/delete.freda',
+                        url : '/organization/roleDelete.freda',
                         method : 'POST',
                         params : {
-                            ids : Cooper4.jsArray2JsString(record,'codeId')
+                            ids : Cooper4.jsArray2JsString(record,'roleId')
                         },
                         success: function(response) {
                             var result = Ext.JSON.decode(response.responseText);
                             Cooper4.showAlert(result.msg);
-                            Ext.data.StoreManager.lookup('codeStore').reload();
+                            Ext.data.StoreManager.lookup('roleStore').reload();
                         }
                     });
                 }
             }
         });
     },
-    synMoneyCode : function(){
+    /**
+     * 权限窗口初始化.
+     *
+     * @param grid
+     * @param av
+     */
+    setAuthWinInit : function(grid,av){
+
+        var that = this;
+
+        var record = Ext.getCmp('roleGrid').getSelectionModel().getSelection();
+        if(Ext.isEmpty(record))
+        {
+            Cooper4.showAlert('请选择..');
+            return ;
+        }
+        if(record.length > 1)
+        {
+            Cooper4.showAlert('请选择单一进行授权.');
+            return ;
+        }
+        if(record[0].get('editMode') == 0)
+        {
+            Cooper4.showAlert('无权进行操作.');
+            return ;
+        }
+        Cooper4.GLOBAL_PARAMS.roleId = record[0].get('roleId');
+        Cooper4.GLOBAL_PARAMS.roleType = record[0].get('roleType');
+
+        Ext.create('Cooper4.plugins.setting.role.AuthWin',{
+
+            listeners : [{
+
+                'eventSetMenuBtnClick' : function(win,treePanel){
+
+                    that.submitSetAuth(win,'menu',treePanel);
+                }
+            },{
+                'eventSetUserBtnClick' : function(win,treePanel){
+
+                    that.submitSetAuth(win,'user',treePanel);
+                }
+            }]
+
+        }).show();
+
+        Ext.getCmp('userTreePanel').expandAll();
+        Ext.getCmp('menuTreePanel').expandAll();
+
+        if(av == 'menu'){
+            Ext.getCmp('treeTabPanel').setActiveTab(0);
+        }else{
+            Ext.getCmp('treeTabPanel').setActiveTab(1);
+        }
+    },
+    /**
+     * 提交绑定
+     *
+     * @param treePanel
+     */
+    submitSetAuth : function(win,mode,treePanel){
+
+        var submitUrl = '';
+
+        if(mode == 'menu'){
+
+            submitUrl = '/authority/menu2Role.freda';
+        }else{
+
+            submitUrl = '/authority/user2Role.freda'
+        }
 
         Ext.Msg.show({
-            title:"提示",
-            message: "确定重新同步数据字典?",
+            title:'提示',
+            message: '确定设置权限?',
             buttons: Ext.Msg.YESNO,
             icon: Ext.Msg.QUESTION,
             fn: function(btn) {
                 if (btn === 'yes') {
                     Cooper4.ux.Ajax.request({
-                        url : '/code/synToCache.freda',
+                        url : submitUrl,
                         method : 'POST',
-                        params : {},
+                        params : {
+                            ids : Cooper4.jsArray2JsString(treePanel.getChecked(),'id'),
+                            roleId : Cooper4.GLOBAL_PARAMS.roleId
+                        },
                         success: function(response) {
                             var result = Ext.JSON.decode(response.responseText);
                             Cooper4.showAlert(result.msg);
+                            win.close();
                         }
                     });
                 }

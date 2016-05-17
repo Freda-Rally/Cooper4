@@ -1,14 +1,13 @@
 /**
+ * 全局参数
  *
- * 数据字典管理
- *
- * Created by rally on 16/5/5.
+ * Created by rally on 16/5/15.
  */
-Ext.define('Cooper4.plugins.setting.code.Index',{
+Ext.define('Cooper4.plugins.setting.param.Index',{
 
     requires : ['Cooper4.ux.Ajax',
-                'Cooper4.plugins.setting.code.AddOrEditWin',
-                'Cooper4.plugins.setting.code.CodeGridPanel'],
+                'Cooper4.plugins.setting.param.AddOrEditWin',
+                'Cooper4.plugins.setting.param.ParamGridPanel'],
 
     constructor : function(){
 
@@ -16,7 +15,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
         Ext.create('Ext.container.Viewport',{
             layout : 'border',
-            items : [Ext.create('Cooper4.plugins.setting.code.CodeGridPanel',{
+            items : [Ext.create('Cooper4.plugins.setting.param.ParamGridPanel',{
 
                 listeners : [{
                     'eventOnAddBtnClick' : function(grid,mode){
@@ -42,9 +41,9 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
             })]
         });
 
-        Ext.data.StoreManager.lookup('codeStore').load();
+        Ext.data.StoreManager.lookup('paramStore').load();
 
-        that.addOrEditWin = Ext.create('Cooper4.plugins.setting.code.AddOrEditWin',{
+        that.addOrEditWin = Ext.create('Cooper4.plugins.setting.param.AddOrEditWin',{
 
             listeners : {
 
@@ -66,7 +65,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
             if(mode == 'add'){
 
-                Ext.getCmp('codeFormPanel').getForm().reset();
+                Ext.getCmp('paramFormPanel').getForm().reset();
                 Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_ADD);
             }else{
 
@@ -86,7 +85,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
                     Cooper4.showAlert("系统内置无法修改..");
                     return ;
                 }
-                Ext.getCmp('codeFormPanel').getForm().loadRecord(record[0]);
+                Ext.getCmp('paramFormPanel').getForm().loadRecord(record[0]);
                 Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_EDIT);
             }
             this.addOrEditWin.show();
@@ -103,11 +102,11 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
         if(Ext.getCmp('submitMode').getValue() == 'add') {
 
-            submitUrl = "/code/add.freda";
+            submitUrl = "/params/add.freda";
         }
         else{
 
-            submitUrl = "/code/edit.freda";
+            submitUrl = "/params/edit.freda";
         }
 
         Ext.Msg.show({
@@ -126,7 +125,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
                         success: function(form, action) {
                             that.addOrEditWin.hide();
                             Cooper4.showAlert(action.result.msg);
-                            Ext.data.StoreManager.lookup('codeStore').reload();
+                            Ext.data.StoreManager.lookup('paramStore').reload();
                         },
                         failure: function(form, action) {
                             switch (action.failureType) {
@@ -171,15 +170,15 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
             fn: function(btn) {
                 if (btn === 'yes') {
                     Cooper4.ux.Ajax.request({
-                        url : '/code/delete.freda',
+                        url : '/params/delete.freda',
                         method : 'POST',
                         params : {
-                            ids : Cooper4.jsArray2JsString(record,'codeId')
+                            ids : Cooper4.jsArray2JsString(record,'paramId')
                         },
                         success: function(response) {
                             var result = Ext.JSON.decode(response.responseText);
                             Cooper4.showAlert(result.msg);
-                            Ext.data.StoreManager.lookup('codeStore').reload();
+                            Ext.data.StoreManager.lookup('paramStore').reload();
                         }
                     });
                 }
@@ -190,13 +189,13 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
         Ext.Msg.show({
             title:"提示",
-            message: "确定重新同步数据字典?",
+            message: "确定重新同步?",
             buttons: Ext.Msg.YESNO,
             icon: Ext.Msg.QUESTION,
             fn: function(btn) {
                 if (btn === 'yes') {
                     Cooper4.ux.Ajax.request({
-                        url : '/code/synToCache.freda',
+                        url : '/params/syn2Cache.freda',
                         method : 'POST',
                         params : {},
                         success: function(response) {

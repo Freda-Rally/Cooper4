@@ -3,6 +3,7 @@ package org.freda.cooper4.framework.datastructure.impl;
 import org.freda.cooper4.framework.datastructure.ParamsDto;
 import org.freda.cooper4.framework.utils.SystemContainer;
 import org.freda.cooper4.framework.utils.WebUtils;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,6 +46,17 @@ public class BaseParamsDto extends BaseDto implements ParamsDto
     public HttpServletRequest getRequest()
     {
         return (HttpServletRequest)this.get(HTTP_REQUEST_DTO_KEY);
+    }
+
+    /**
+     * 获得上传request
+     *
+     * @return
+     */
+    @Override
+    public MultipartHttpServletRequest getMultipartHttpServletRequest()
+    {
+        return (MultipartHttpServletRequest)this.getRequest();
     }
 
     /**

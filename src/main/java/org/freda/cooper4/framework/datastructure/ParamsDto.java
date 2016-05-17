@@ -1,5 +1,7 @@
 package org.freda.cooper4.framework.datastructure;
 
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -17,6 +19,12 @@ public interface ParamsDto extends Dto
      * @return HttpServletRequest
      */
     public HttpServletRequest getRequest();
+
+    /**
+     * 获得上传request
+     * @return
+     */
+    public MultipartHttpServletRequest getMultipartHttpServletRequest();
 
     /**
      *

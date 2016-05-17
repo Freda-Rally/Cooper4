@@ -50,9 +50,9 @@ public class IndexServiceImpl extends Cooper4AdminBaseServiceImpl implements Ind
     {
         pDto.put("userId",super.getUserInfoVo(pDto).getUserId());
 
-        pDto.put("oldPwd",CodecUtils.decryptBasedDes(pDto.getAsString("oldPwd")));
+        pDto.put("oldPwd",CodecUtils.encryptBasedDes(pDto.getAsString("oldPwd")));
 
-        pDto.put("newPwd",CodecUtils.decryptBasedDes(pDto.getAsString("newPwd")));
+        pDto.put("newPwd",CodecUtils.encryptBasedDes(pDto.getAsString("newPwd")));
 
         if (super.getDao().update("admin.core.Index.editPwd", pDto) > 0)
         {

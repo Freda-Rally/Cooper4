@@ -6,13 +6,13 @@
     <defaultCache eternal="false" maxElementsInMemory="1000" overflowToDisk="false" diskPersistent="false"
                   timeToIdleSeconds="0" timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU" />
     <!-- 数据库ID缓存 -->
-    <cache name="DBIDSequence" eternal="false" maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
-           timeToIdleSeconds="0" timeToLiveSeconds="300" memoryStoreEvictionPolicy="LRU" />
+    <cache name="DBIDSequence" eternal="true" maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
+           timeToIdleSeconds="0" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
     <!-- 数据字典缓存 -->
-    <cache name="CodeCache" eternal="false" maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
-           timeToIdleSeconds="0" timeToLiveSeconds="300" memoryStoreEvictionPolicy="LRU" />
+    <cache name="CodeCache" eternal="true" maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
+           timeToIdleSeconds="0" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
     <!-- 全局参数缓存 -->
-    <cache name="ParamsCache" eternal="false" maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
-           timeToIdleSeconds="0" timeToLiveSeconds="300" memoryStoreEvictionPolicy="LRU" />
+    <cache name="ParamsCache" eternal="true" maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
+           timeToIdleSeconds="0" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
 
 </ehcache>

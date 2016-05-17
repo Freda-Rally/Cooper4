@@ -25,13 +25,6 @@ apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
 
-idea {
-    module {
-        inheritOutputDirs = false
-        outputDir = file("$buildDir/classes/main/")
-    }
-}
-
 jar {
     baseName = 'Cooper4'
     version = '1.0.1'

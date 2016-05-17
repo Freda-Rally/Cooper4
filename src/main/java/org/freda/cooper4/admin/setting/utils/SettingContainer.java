@@ -1,4 +1,4 @@
-package org.freda.cooper4.admin.setting;
+package org.freda.cooper4.admin.setting.utils;
 
 /**
  *

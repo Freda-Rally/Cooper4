@@ -59,7 +59,6 @@ public class MyBatisConfiguration implements EnvironmentAware,TransactionManagem
      * @return
      */
     @Bean(name = "sqlSessionFactory")
-
     public SqlSessionFactory sqlSessionFactoryBean()
     {
         try

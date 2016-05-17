@@ -2,6 +2,109 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="admin.setting.Authority">
 
+    <!-- 删除角色下所有绑定人员的绑定信息. -->
+    <delete id="deleteByRole4UserRole" parameterType="dto">
+        DELETE FROM _COOPER4_USER_ROLE WHERE _COOPER4_USER_ROLE._ROLEID = #{roleId}
+    </delete>
 
+    <!-- 删除人员下所有绑定角色的绑定信息. -->
+    <delete id="deleteByUser4UserRole" parameterType="dto">
+        DELETE FROM _COOPER4_USER_ROLE WHERE _COOPER4_USER_ROLE._USERID = #{userId}
+    </delete>
 
+    <!-- 添加角色人员绑定. -->
+    <insert id="addUserRole" parameterType="dto">
+        INSERT INTO _COOPER4_USER_ROLE(
+            _COOPER4_USER_ROLE._USERROLEID,
+            _COOPER4_USER_ROLE._USERID,
+            _COOPER4_USER_ROLE._ROLEID,
+            _COOPER4_USER_ROLE._CREATETIME
+        )VALUES(#{userRoleId},#{userId},#{roleId},NOW())
+    </insert>
+
+    <!-- 删除角色下所有绑定菜单的绑定信息. -->
+    <delete id="deleteByRole4RoleMenu" parameterType="dto">
+        DELETE FROM _COOPER4_ROLE_MENU WHERE _COOPER4_ROLE_MENU._ROLEID = #{roleId}
+    </delete>
+
+    <!-- 删除菜单下所有绑定角色的绑定信息. -->
+    <delete id="deleteByMenu4RoleMenu" parameterType="dto">
+        DELETE FROM _COOPER4_ROLE_MENU WHERE _COOPER4_ROLE_MENU._MENUID = #{menuId}
+    </delete>
+
+    <!-- 添加角色菜单绑定. -->
+    <insert id="addRoleMenu" parameterType="dto">
+        INSERT INTO _COOPER4_ROLE_MENU(
+            _COOPER4_ROLE_MENU._ROLEMENUID,
+            _COOPER4_ROLE_MENU._MENUID,
+            _COOPER4_ROLE_MENU._ROLEID,
+            _COOPER4_ROLE_MENU._ISQUICK,
+            _COOPER4_ROLE_MENU._CREATETIME
+        )VALUES(#{roleMenuId},#{menuId},#{roleId},0,NOW())
+    </insert>
+
+    <!-- ===================================================== -->
+
+    <!-- 查询部门下所有用户附带权限信息. -->
+    <select id="listUserWithRole" parameterType="dto" resultType="dto">
+        SELECT
+            CONCAT('user_',_COOPER4_USER._USERID) AS id,
+            _COOPER4_USER._USERNAME AS text,
+            CONCAT('dept_',#{node}) AS parentId,
+            '1' AS leaf,
+            'userIcon' AS iconCls,
+            _COOPER4_USER_ROLE._ROLEID AS roleId
+        FROM _COOPER4_USER
+        LEFT JOIN _COOPER4_USER_ROLE ON _COOPER4_USER_ROLE._USERID = _COOPER4_USER._USERID
+                                     AND _COOPER4_USER_ROLE._ROLEID = #{roleId}
+        WHERE
+            CONCAT('dept_',_COOPER4_USER._DEPTID) = #{node}
+            AND _COOPER4_USER._STATUS = 1
+            AND _COOPER4_USER._LOCKED = 0
+            <if test="roleType == 1">
+                _COOPER4_USER._USERTYPE = 2
+            </if>
+
+    </select>
+
+    <!-- 角色树附带人员绑定信息. -->
+    <select id="roleTreeWithUser" parameterType="dto" resultType="dto">
+        SELECT
+            CONCAT('role_',_COOPER4_ROLE._ROLEID) AS id,
+            _COOPER4_ROLE._ROLENAME AS text,
+            'role_1' AS parentId,
+            1 AS leaf,
+            '' AS iconCls,
+            _COOPER4_USER_ROLE._USERID AS userId
+        FROM _COOPER4_ROLE
+        LEFT JOIN _COOPER4_USER_ROLE ON _COOPER4_USER_ROLE._ROLEID = _COOPER4_ROLE._ROLEID
+                                     AND _COOPER4_USER_ROLE._USERID = #{userId}
+        WHERE
+            _COOPER4_ROLE._STATUS = 1
+            <if test="userType == 3">
+                AND _COOPER4_ROLE._ROLETYPE = 2
+            </if>
+            AND _COOPER4_ROLE._EDITMODE = 1
+    </select>
+
+    <!-- 菜单树附带角色绑定信息. -->
+    <select id="menuTreeWithRole" parameterType="dto" resultType="dto">
+        SELECT
+            CONCAT('menu_',_COOPER4_MENU._MENUID) AS id,
+            _COOPER4_MENU._MENUNAME AS text,
+            CONCAT('menu_',_COOPER4_MENU._PARENTID) AS parentId,
+            _COOPER4_MENU._LEAF AS leaf,
+            _COOPER4_MENU._ICONCLS AS iconCls,
+            _COOPER4_ROLE_MENU._ROLEID AS roleId
+        FROM _COOPER4_MENU
+        LEFT JOIN _COOPER4_ROLE_MENU ON _COOPER4_ROLE_MENU._MENUID = _COOPER4_MENU._MENUID
+                                     AND _COOPER4_ROLE_MENU._ROLEID = #{roleId}
+        WHERE
+            CONCAT('menu_',_COOPER4_MENU._PARENTID) = #{node}
+            AND _COOPER4_MENU._STATUS = 1
+            <if test="roleType == 2">
+                AND _COOPER4_MENU._MENUTYPE = 2
+            </if>
+        ORDER BY _COOPER4_MENU._SORTNO ,_COOPER4_MENU._MENUID ASC
+    </select>
 </mapper>

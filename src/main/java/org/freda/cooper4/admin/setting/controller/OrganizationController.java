@@ -1,14 +1,17 @@
 package org.freda.cooper4.admin.setting.controller;
 
 import com.github.pagehelper.Page;
-import org.freda.cooper4.admin.setting.SettingContainer;
+import org.freda.cooper4.admin.setting.service.DeptTreeService;
 import org.freda.cooper4.admin.setting.service.OrganizationService;
+import org.freda.cooper4.admin.setting.utils.SettingContainer;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseController;
+import org.freda.cooper4.framework.datastructure.Dto;
 import org.freda.cooper4.framework.json.JsonHelper;
 import org.freda.cooper4.framework.utils.SystemContainer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,9 +25,11 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/organization")
 public class OrganizationController extends Cooper4AdminBaseController
 {
-
+    @Resource
     private OrganizationService organizationService;
 
+    @Resource
+    private DeptTreeService deptTreeService;
     /**
      *
      * 人员查询.
@@ -54,7 +59,7 @@ public class OrganizationController extends Cooper4AdminBaseController
     @RequestMapping(value = "/userLoad")
     public String userLoad(HttpServletRequest request,HttpServletResponse response)throws Exception
     {
-        super.write(JsonHelper.encodeObject2Json(cooper4Reader.queryForObject("admin.setting.Organization.loadUser",super.getParamsAsDto(request))),response);
+        super.write(JsonHelper.encodeDto2FormLoadJson((Dto)cooper4Reader.queryForObject("admin.setting.Organization.loadUser",super.getParamsAsDto(request)),null),response);
 
         return null;
     }
@@ -136,7 +141,7 @@ public class OrganizationController extends Cooper4AdminBaseController
     {
         Page page = cooper4Reader.queryForPage("admin.setting.Organization.deptList4Page",super.getParamsAsDto(request));
 
-        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal()),response);
+        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal(),SystemContainer.DATE_TIME_FORMART[0]),response);
 
         return null;
     }
@@ -207,7 +212,7 @@ public class OrganizationController extends Cooper4AdminBaseController
     {
         Page page = cooper4Reader.queryForPage("admin.setting.Organization.roleList4Page",super.getParamsAsDto(request));
 
-        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal()),response);
+        super.write(JsonHelper.encodeList2PageJson(page.getResult(),page.getTotal(),SystemContainer.DATE_TIME_FORMART[0]),response);
 
         return null;
     }
@@ -259,6 +264,22 @@ public class OrganizationController extends Cooper4AdminBaseController
         organizationService.roleDelete(super.getParamsAsDto(request));
 
         super.setOkTipMsg(SystemContainer.TIPS_SUCCESS_MSG,response);
+
+        return null;
+    }
+
+    /**
+     * 部门树.
+     *
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/deptTreeInit")
+    public String deptTreeInit(HttpServletRequest request,HttpServletResponse response)throws Exception
+    {
+        super.write(JsonHelper.encodeObject2Json(deptTreeService.treeInit(super.getParamsAsDto(request))),response);
 
         return null;
     }

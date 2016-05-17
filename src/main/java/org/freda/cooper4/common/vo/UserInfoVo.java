@@ -46,6 +46,10 @@ public class UserInfoVo extends BaseVo
      * 浏览器类型
      */
     private String explorerType;
+    /**
+     * 服务器SessionId
+     */
+    private String sessionId;
 
 
     public long getUserId()
@@ -136,5 +140,15 @@ public class UserInfoVo extends BaseVo
     public void setExplorerType(String explorerType)
     {
         this.explorerType = explorerType;
+    }
+
+    public String getSessionId()
+    {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId)
+    {
+        this.sessionId = sessionId;
     }
 }

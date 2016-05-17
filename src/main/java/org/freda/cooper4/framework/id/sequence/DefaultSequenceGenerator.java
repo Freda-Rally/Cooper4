@@ -78,7 +78,7 @@ public class DefaultSequenceGenerator implements SequenceGenerator
             }
         }
         currCount = initValue;
-        currCount ++;
+        //currCount ++;
     }
 
     /**
@@ -88,7 +88,7 @@ public class DefaultSequenceGenerator implements SequenceGenerator
     @Override
     public synchronized long next(String id) throws SequenceCreateException
     {
-        if (!initiated && this.id == null && !id.equals(this.id))
+        if (!initiated || this.id == null || !id.equals(this.id))
             init(id);//初始化.
 
         if (currCount >= maxValue)
@@ -106,9 +106,9 @@ public class DefaultSequenceGenerator implements SequenceGenerator
                 throw new SequenceCreateException(msg);
             }
         }
-        sequenceStore.update(currCount,id);
-
         currCount++;
+
+        sequenceStore.update(currCount,id);
 
         return currCount;
     }

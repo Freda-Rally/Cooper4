@@ -1,14 +1,16 @@
 /**
  *
- * 数据字典管理
+ * 菜单管理
  *
- * Created by rally on 16/5/5.
+ * Created by rally on 16/5/11.
  */
-Ext.define('Cooper4.plugins.setting.code.Index',{
+Ext.define('Cooper4.plugins.setting.menu.Index',{
 
-    requires : ['Cooper4.ux.Ajax',
-                'Cooper4.plugins.setting.code.AddOrEditWin',
-                'Cooper4.plugins.setting.code.CodeGridPanel'],
+    requires : ['Cooper4.plugins.setting.menu.MenuTreePanel',
+                'Cooper4.plugins.setting.menu.MenuGridPanel',
+                'Cooper4.plugins.setting.menu.AddOrEditWin',
+                'Cooper4.ux.Ajax'],
+
 
     constructor : function(){
 
@@ -16,7 +18,7 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
         Ext.create('Ext.container.Viewport',{
             layout : 'border',
-            items : [Ext.create('Cooper4.plugins.setting.code.CodeGridPanel',{
+            items : [Ext.create('Cooper4.plugins.setting.menu.MenuGridPanel',{
 
                 listeners : [{
                     'eventOnAddBtnClick' : function(grid,mode){
@@ -31,26 +33,33 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
                 },{
                     'eventOnDeleteBtnClick' : function(grid){
 
-                        that.deleteCode(grid);
+                        that.deleteMenu(grid);
                     }
-                },{
-                    'eventOnMoneySynBtnClick' : function(grid){
+                }]
+            }),Ext.create('Cooper4.plugins.setting.menu.MenuTreePanel',{
 
-                        that.synMoneyCode();
+                listeners : [{
+
+                    'eventTreeItemClick' : function(panel,id,superName){
+
+                        Cooper4.GLOBAL_PARAMS.parentId = id;
+
+                        Cooper4.GLOBAL_PARAMS.parentName = superName;
+
+                        Ext.data.StoreManager.lookup('menuStore').load();
+
                     }
                 }]
             })]
         });
 
-        Ext.data.StoreManager.lookup('codeStore').load();
-
-        that.addOrEditWin = Ext.create('Cooper4.plugins.setting.code.AddOrEditWin',{
+        that.addOrEditWin = Ext.create('Cooper4.plugins.setting.menu.AddOrEditWin',{
 
             listeners : {
 
                 'eventSave' : function(win,form){
 
-                    that.addOrEditCode(form);
+                    that.addOrEditMenu(form);
                 }
             }
 
@@ -58,44 +67,54 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
     },
     /**
-     * 窗口打开初始化..
+     * 窗口显示初始化.
+     * @param grid
+     * @param mode
      */
     addOrEditWinInit : function(grid,mode){
 
-        if(this.addOrEditWin){
+        if(mode == 'add'){
 
-            if(mode == 'add'){
-
-                Ext.getCmp('codeFormPanel').getForm().reset();
-                Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_ADD);
-            }else{
-
-                var record = grid.getSelectionModel().getSelection();
-                if(Ext.isEmpty(record)) {
-
-                    Cooper4.showAlert("请选择修改项.");
-                    return ;
-                }
-                if(record.length > 1){
-
-                    Cooper4.showAlert("请选择单一项.");
-                    return ;
-                }
-                if(record[0].get('editMode') == 0){
-
-                    Cooper4.showAlert("系统内置无法修改..");
-                    return ;
-                }
-                Ext.getCmp('codeFormPanel').getForm().loadRecord(record[0]);
-                Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_EDIT);
+            var record = Ext.getCmp('menuTree').getSelection()[0];
+            if(Ext.isEmpty(record))
+            {
+                Cooper4.showAlert('请选择往哪个菜单下添加.');
+                return ;
             }
-            this.addOrEditWin.show();
+
+            Ext.getCmp('menuFormPanel').getForm().reset();
+            Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_ADD);
+            Ext.getCmp('parentName').setValue(Cooper4.GLOBAL_PARAMS.parentName);
+            Ext.getCmp('parentId').setValue(Cooper4.GLOBAL_PARAMS.parentId);
+
+        }else{
+
+            var record = grid.getSelectionModel().getSelection();
+            if(Ext.isEmpty(record)) {
+
+                Cooper4.showAlert("请选择修改项.");
+                return ;
+            }
+            if(record.length > 1){
+
+                Cooper4.showAlert("请选择单一项.");
+                return ;
+            }
+            if(record[0].get('editMode') == 0){
+
+                Cooper4.showAlert("只读项目无法修改..");
+                return ;
+            }
+            Ext.getCmp('menuFormPanel').getForm().loadRecord(record[0]);
+            Ext.getCmp('submitMode').setValue(Cooper4.SUBMIT_MODE_EDIT);
         }
+        this.addOrEditWin.show();
     },
     /**
-     * 提交添加或修改操作..
+     * 提交FORM
+     * @param form
      */
-    addOrEditCode : function(form){
+    addOrEditMenu : function(form){
 
         var that = this;
 
@@ -103,11 +122,11 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
 
         if(Ext.getCmp('submitMode').getValue() == 'add') {
 
-            submitUrl = "/code/add.freda";
+            submitUrl = "/menu/add.freda";
         }
         else{
 
-            submitUrl = "/code/edit.freda";
+            submitUrl = "/menu/edit.freda";
         }
 
         Ext.Msg.show({
@@ -126,7 +145,10 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
                         success: function(form, action) {
                             that.addOrEditWin.hide();
                             Cooper4.showAlert(action.result.msg);
-                            Ext.data.StoreManager.lookup('codeStore').reload();
+                            Ext.data.StoreManager.lookup('menuStore').reload();
+                            Ext.getCmp('menuTree').store.load({
+                                node : Ext.getCmp('menuTree').getRootNode()
+                            });
                         },
                         failure: function(form, action) {
                             switch (action.failureType) {
@@ -146,9 +168,10 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
         });
     },
     /**
-     * 提交删除操作..
+     * 删除菜单.
+     * @param grid
      */
-    deleteCode : function(grid){
+    deleteMenu : function(grid){
 
         var record = grid.getSelectionModel().getSelection();
         if(Ext.isEmpty(record))
@@ -158,7 +181,11 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
         }
         for(var i=0;i<record.length;i++){
             if(record[i].get('editMode') == 0){
-                Cooper4.showAlert("选择项中含有系统内置项目.");
+                Cooper4.showAlert("选择项中含有只读项目.");
+                return ;
+            }
+            if(record[0].get('menuLeaf') != 1){
+                Cooper4.showAlert('系统只允许从末级菜单开始依次删除.');
                 return ;
             }
         }
@@ -171,37 +198,19 @@ Ext.define('Cooper4.plugins.setting.code.Index',{
             fn: function(btn) {
                 if (btn === 'yes') {
                     Cooper4.ux.Ajax.request({
-                        url : '/code/delete.freda',
+                        url : '/menu/delete.freda',
                         method : 'POST',
                         params : {
-                            ids : Cooper4.jsArray2JsString(record,'codeId')
+                            menuId : Cooper4.jsArray2JsString(record,'menuId'),
+                            parentId : Cooper4.GLOBAL_PARAMS.parentId
                         },
                         success: function(response) {
                             var result = Ext.JSON.decode(response.responseText);
                             Cooper4.showAlert(result.msg);
-                            Ext.data.StoreManager.lookup('codeStore').reload();
-                        }
-                    });
-                }
-            }
-        });
-    },
-    synMoneyCode : function(){
-
-        Ext.Msg.show({
-            title:"提示",
-            message: "确定重新同步数据字典?",
-            buttons: Ext.Msg.YESNO,
-            icon: Ext.Msg.QUESTION,
-            fn: function(btn) {
-                if (btn === 'yes') {
-                    Cooper4.ux.Ajax.request({
-                        url : '/code/synToCache.freda',
-                        method : 'POST',
-                        params : {},
-                        success: function(response) {
-                            var result = Ext.JSON.decode(response.responseText);
-                            Cooper4.showAlert(result.msg);
+                            Ext.data.StoreManager.lookup('menuStore').reload();
+                            Ext.getCmp('menuTree').store.load({
+                                node : Ext.getCmp('menuTree').getRootNode()
+                            });
                         }
                     });
                 }

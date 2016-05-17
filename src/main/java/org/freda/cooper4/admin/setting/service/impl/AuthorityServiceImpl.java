@@ -2,13 +2,17 @@ package org.freda.cooper4.admin.setting.service.impl;
 
 import org.freda.cooper4.admin.setting.service.Authority4OrganizationService;
 import org.freda.cooper4.admin.setting.service.Authority4TreeService;
+import org.freda.cooper4.admin.setting.service.DeptTreeService;
+import org.freda.cooper4.common.generator.dbid.Cooper4DBIdHelper;
 import org.freda.cooper4.common.support.web.Cooper4AdminBaseServiceImpl;
 import org.freda.cooper4.framework.datastructure.Dto;
 import org.freda.cooper4.framework.utils.FredaUtils;
 import org.freda.cooper4.framework.utils.SystemContainer;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -17,8 +21,12 @@ import java.util.List;
  *
  * Created by rally on 16/5/9.
  */
+@Service
 public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements Authority4OrganizationService,Authority4TreeService
 {
+    @Resource
+    private DeptTreeService deptTreeService;
+
     /**
      * 人员添加至角色.
      *
@@ -30,15 +38,17 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     {
         String[] ids = pDto.getAsString("ids").split(",");
 
-        super.getDao().delete("",pDto);
+        super.getDao().delete("admin.setting.Authority.deleteByRole4UserRole",pDto);
 
         for (String id : ids)
         {
             if (FredaUtils.isNotEmpty(id))
             {
-                pDto.put("userId",id);
+                pDto.put("userId",id.split("_")[1]);
 
-                super.getDao().insert("",pDto);
+                pDto.put("userRoleId", Cooper4DBIdHelper.getDbTableID("USERROLEID"));
+
+                super.getDao().insert("admin.setting.Authority.addUserRole",pDto);
             }
         }
     }
@@ -54,18 +64,20 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     {
         String[] ids = pDto.getAsString("ids").split(",");
 
-        super.getDao().delete("",pDto);
+        super.getDao().delete("admin.setting.Authority.deleteByUser4UserRole",pDto);
 
         for (String id : ids)
         {
-            pDto.put("roleId",id);
+            pDto.put("roleId",id.split("_")[1]);
 
-            super.getDao().insert("",pDto);
+            pDto.put("userRoleId", Cooper4DBIdHelper.getDbTableID("USERROLEID"));
+
+            super.getDao().insert("admin.setting.Authority.addUserRole",pDto);
         }
     }
 
     /**
-     * 角色绑定菜单.
+     * 菜单绑定至角色.
      *
      * @param pDto
      */
@@ -75,13 +87,15 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     {
         String[] ids = pDto.getAsString("ids").split(",");
 
-        super.getDao().delete("",pDto);
+        super.getDao().delete("admin.setting.Authority.deleteByRole4RoleMenu",pDto);
 
         for (String id : ids)
         {
-            pDto.put("menuId",id);
+            pDto.put("menuId",id.split("_")[1]);
 
-            super.getDao().insert("",pDto);
+            pDto.put("roleMenuId",Cooper4DBIdHelper.getDbTableID("ROLEMENUID"));
+
+            super.getDao().insert("admin.setting.Authority.addRoleMenu",pDto);
         }
     }
 
@@ -94,7 +108,7 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     @Transactional(propagation = Propagation.MANDATORY)
     public void delete4UserRm(Dto pDto)
     {
-        super.getDao().delete("",pDto);
+        super.getDao().delete("admin.setting.Authority.deleteByUser4UserRole",pDto);
     }
 
     /**
@@ -106,9 +120,9 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     @Transactional(propagation = Propagation.MANDATORY)
     public void delete4RoleRm(Dto pDto)
     {
-        super.getDao().delete("",pDto);
+        super.getDao().delete("admin.setting.Authority.deleteByRole4UserRole",pDto);
 
-        super.getDao().delete("",pDto);
+        super.getDao().delete("admin.setting.Authority.deleteByRole4RoleMenu",pDto);
     }
 
     /**
@@ -120,7 +134,7 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     @Transactional(propagation = Propagation.MANDATORY)
     public void delete4MenuRm(Dto pDto)
     {
-        super.getDao().delete("",pDto);
+        super.getDao().delete("admin.setting.Authority.deleteByMenu4RoleMenu",pDto);
     }
 
     /**
@@ -132,9 +146,17 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     @Override
     public List userAndDeptTree4Role(Dto pDto)
     {
+        List<?> data = deptTreeService.treeInit(pDto);//先生成部门树.
 
-
-        return null;
+        if (FredaUtils.isEmpty(data))//末级部门查询用户.
+        {
+            data = this.setListChecked(super.getDao().queryForList("admin.setting.Authority.listUserWithRole",pDto),"roleId");
+        }
+        else
+        {
+            this.setListLeaf(data,0);
+        }
+        return data;
     }
 
     /**
@@ -146,7 +168,7 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     @Override
     public List roleTree4User(Dto pDto)
     {
-        return null;
+        return this.setListChecked(super.getDao().queryForList("admin.setting.Authority.roleTreeWithUser",pDto),"userId");
     }
 
     /**
@@ -158,7 +180,7 @@ public class AuthorityServiceImpl extends Cooper4AdminBaseServiceImpl implements
     @Override
     public List menuTree4Role(Dto pDto)
     {
-        return null;
+        return this.setListChecked(super.getDao().queryForList("admin.setting.Authority.menuTreeWithRole",pDto),"roleId");
     }
 
     /**

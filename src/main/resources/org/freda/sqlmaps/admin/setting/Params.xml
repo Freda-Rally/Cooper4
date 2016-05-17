@@ -15,7 +15,7 @@
     </select>
 
     <!-- 管理查询用 -->
-    <select id="query4Page" parameterType="dto" resultType="dto">
+    <select id="list4Page" parameterType="dto" resultType="dto">
         SELECT
             _COOPER4_PARAM._PARAMID AS paramId,
             _COOPER4_PARAM._KEY AS pKey,
@@ -41,7 +41,7 @@
             _COOPER4_PARAM._STATUS,
             _COOPER4_PARAM._EDITMODE,
             _COOPER4_PARAM._DESC
-        )VALUES (#{paramId},#{pKey},#{pValue},{status},1,#{pDesc})
+        )VALUES (#{paramId},#{pKey},#{pValue},#{status},1,#{pDesc})
     </insert>
 
     <!-- 修改 -->
