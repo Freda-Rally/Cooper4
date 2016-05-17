@@ -36,4 +36,18 @@ public interface FileUpLoadService
      * @return
      */
     public abstract Dto getUploadFile(String fileId);
+
+    /**
+     * 删除一个批次的上传文件.
+     *
+     * @param sequenceId
+     */
+    public abstract void deleteUploadFiles(String sequenceId);
+
+    /**
+     * 上传某个上传的文件.
+     *
+     * @param fileId
+     */
+    public abstract void deleteUploadFile(String fileId);
 }

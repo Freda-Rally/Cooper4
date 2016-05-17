@@ -45,4 +45,12 @@
         )VALUES(#{fileId},#{fileRealName},#{fileSystemName},#{fileType},#{filePath},#{fileSequence},#{fileSortNo},NOW())
     </insert>
 
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE FROM _COOPER4_FILE WHERE _COOPER4_FILE._FILEID = #{id}
+    </delete>
+
+    <select id="deleteBySequence" parameterType="java.lang.String">
+        DELETE FROM _COOPER4_FILE WHERE _COOPER4_FILE._FILESEQUENCE = #{id}
+    </select>
+
 </mapper>

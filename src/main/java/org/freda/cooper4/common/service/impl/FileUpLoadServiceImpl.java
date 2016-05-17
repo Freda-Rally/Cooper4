@@ -108,4 +108,36 @@ public class FileUpLoadServiceImpl extends Cooper4AdminBaseServiceImpl implement
     {
         return (Dto)super.getDao().queryForObject("common.UploadFile.load",fileId);
     }
+
+    /**
+     * 删除一个批次的上传文件.
+     *
+     * @param sequenceId
+     */
+    @Override
+    public void deleteUploadFiles(String sequenceId)
+    {
+        List<Dto> files = this.listUploadFiles(sequenceId);
+
+        for (Dto file : files)
+        {
+            new File(file.getAsString(FILE_PATH) + file.getAsString(FILE_SYSTEM_NAME)).delete();
+        }
+        super.getDao().delete("common.UploadFile.deleteBySequence",sequenceId);
+    }
+
+    /**
+     * 上传某个上传的文件.
+     *
+     * @param fileId
+     */
+    @Override
+    public void deleteUploadFile(String fileId)
+    {
+        Dto file = this.getUploadFile(fileId);
+
+        new File(file.getAsString(FILE_PATH) + file.getAsString(FILE_SYSTEM_NAME)).delete();
+
+        super.getDao().delete("common.UploadFile.deleteById",fileId);
+    }
 }
